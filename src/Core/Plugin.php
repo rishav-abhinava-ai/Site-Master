@@ -8,7 +8,11 @@
 namespace Abhinava\SiteMaster\Core;
 
 use Abhinava\SiteMaster\Admin\StatusPage;
+use Abhinava\SiteMaster\Content\AuthorData;
+use Abhinava\SiteMaster\Content\RssFeaturedImage;
 use Abhinava\SiteMaster\Profiles\ProfileResolver;
+use Abhinava\SiteMaster\Security\SvgSanitizer;
+use Abhinava\SiteMaster\SEO\RankMathBridge;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,6 +46,10 @@ final class Plugin {
 		);
 
 		$profile = ProfileResolver::resolve();
+		( new SvgSanitizer() )->register();
+		( new AuthorData() )->register();
+		( new RankMathBridge() )->register();
+		( new RssFeaturedImage() )->register();
 
 		if ( is_admin() ) {
 			( new StatusPage( $profile ) )->register();
@@ -50,7 +58,7 @@ final class Plugin {
 		/**
 		 * Fires after Site Master has resolved its active profile.
 		 *
-		 * No later-phase feature modules are enabled in the 0.0.2 scaffold.
+		 * No later-phase feature modules are enabled in Development 0.0.3.
 		 */
 		do_action( 'site_master/booted', $profile );
 	}

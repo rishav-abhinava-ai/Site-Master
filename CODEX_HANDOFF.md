@@ -831,6 +831,61 @@ Known Limitations / Follow-up:
 - the status page intentionally provides profile setup only; analytics settings/dashboard are deferred to 0.1.0
 - next authorized phase is 0.0.3; planned Analytics remains 0.1.0
 
+## Development Version 0.0.3 — Shared Core / Rank Math Boundary / SVG / Author / Dates / Breadcrumbs / RSS
+
+Date: 2026-09-14
+
+Purpose:
+
+- provide production-oriented shared services for both site profiles without beginning widget or template migration
+
+Implemented:
+
+- centralized Rank Math availability and breadcrumb-output access with graceful no-op behavior
+- reusable visible breadcrumb renderer that avoids nested navigation and strips unsupported attributes
+- fail-closed SVG/SVGZ upload integration using the declared `enshrined/svg-sanitize` dependency
+- shared `profile_picture` author service, secure profile mutation, WordPress image/avatar fallback and relationship-only removal
+- server-rendered published/modified date data, WordPress-timezone formatting, ISO-8601 values and semantic `<time>` output
+- one shared RSS featured-image filter implementation with feed-only and duplicate-output guards
+- bootstrap registration of shared services without frontend assets or legacy widget/AJAX registration
+
+Architecture / Decisions:
+
+- Rank Math remains the sole SEO/schema owner; no SearchAction or sitemap-cache override is registered
+- SVG MIME acceptance is disabled unless the trusted sanitizer is autoloadable and the user has normal upload plus elevated media-management capability
+- Composer owns the sanitizer dependency; Site Master loads one root vendor autoloader when present and never falls back to MIME-only SVG acceptance
+- exact dates require no JavaScript; legacy date AJAX actions remain documented compatibility contracts for later widget adapters
+- both legacy RSS implementations were materially equivalent and are consolidated as shared behavior
+
+Compatibility Preserved:
+
+- `profile_picture`, existing attachment IDs, Rank Math data, saved Elementor data/widget IDs, and legacy date action contracts remain unchanged
+- avatar removal deletes only the user-meta relationship, never the Media Library attachment
+- no posts, users, media, SEO records or production data were migrated or rewritten
+
+Files / Modules Materially Affected:
+
+- `site-master.php`, `composer.json`, `README.md`, `docs/PROJECT_OVERVIEW.md`
+- `src/Core/Plugin.php`, `src/SEO/RankMathBridge.php`, `src/Components/Breadcrumbs/BreadcrumbRenderer.php`
+- `src/Security/SvgSanitizer.php`, `src/Content/AuthorData.php`, `src/Support/DateFormatter.php`, `src/Content/RssFeaturedImage.php`
+- `tests/shared-core-smoke.php`, `tests/README.md`, `CODEX_HANDOFF.md`
+
+Validation:
+
+- PHP lint: 25/25 files passed before version advancement
+- existing scaffold suite: 14/14 cases passed
+- shared-core suite: Rank Math unavailable/mock, breadcrumb wrapper behavior, SVG unavailable/mock security payloads, author security/fallback/removal, date/time and RSS behavior passed
+- Composer JSON structure parsed successfully; Composer CLI and dependency installation were unavailable
+- executable hygiene: no Site Master schema/microdata, forbidden Rank Math filters, legacy date AJAX, view-count update, remote request, or frontend asset registration
+- mutation review limited writes to protected admin profile settings, authorized author-meta relationship changes, and in-place temporary SVG upload sanitization
+
+Known Limitations / Follow-up:
+
+- the trusted SVG package is declared but not installed in this workspace; SVG upload therefore remains securely disabled until production dependencies are installed
+- live WordPress, Rank Math breadcrumb, Media Library upload, profile-admin, feed and browser tests were not run; no `debug.log` was available
+- no formal PHPCS, PHPStan or PHPUnit configuration exists yet
+- next authorized phase is 0.0.4; it has not been started
+
 # 19. How Future Entries Must Be Added
 
 After every successful development phase, append a new section:

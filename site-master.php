@@ -3,7 +3,7 @@
  * Plugin Name: Site Master
  * Plugin URI:  https://techgenyz.com/
  * Description: Shared publishing, Elementor, media, product, company, and performance infrastructure for Techgenyz and The Blissz.
- * Version:     0.0.2
+ * Version:     0.0.3
  * Author:      Techgenyz
  * Text Domain: site-master
  * Domain Path: /languages
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * This is the authoritative Development Version.
  * Production releases use an independent production-version track.
  */
-define( 'SITE_MASTER_DEVELOPMENT_VERSION', '0.0.2' );
+define( 'SITE_MASTER_DEVELOPMENT_VERSION', '0.0.3' );
 
 /**
  * WordPress/release metadata for the current development source.
@@ -27,7 +27,7 @@ define( 'SITE_MASTER_DEVELOPMENT_VERSION', '0.0.2' );
  * During production packaging this value and the plugin header Version are
  * changed in the temporary production staging copy only.
  */
-define( 'SITE_MASTER_VERSION', '0.0.2' );
+define( 'SITE_MASTER_VERSION', '0.0.3' );
 
 define( 'SITE_MASTER_CHANNEL', 'development' );
 define( 'SITE_MASTER_SLUG', 'site-master' );
@@ -35,6 +35,11 @@ define( 'SITE_MASTER_FILE', __FILE__ );
 define( 'SITE_MASTER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SITE_MASTER_URL', plugin_dir_url( __FILE__ ) );
 define( 'SITE_MASTER_BASENAME', plugin_basename( __FILE__ ) );
+
+$site_master_vendor_autoload = SITE_MASTER_PATH . 'vendor/autoload.php';
+if ( is_readable( $site_master_vendor_autoload ) ) {
+	require_once $site_master_vendor_autoload;
+}
 
 /**
  * Minimal PSR-4-style first-party autoloader.

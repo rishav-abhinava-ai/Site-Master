@@ -37,6 +37,6 @@ The tracks are independent.
 
 ## Current foundation scope
 
-Development 0.0.2 completes the bootstrap, explicit profiles, module boundaries, dependency detection and setup/status foundation.
+Development 0.0.3 provides shared SVG security, author/avatar data, exact date formatting, the Rank Math boundary, visible breadcrumb integration, and RSS featured-image compatibility.
 
 Feature implementation belongs to later authorized development phases.
