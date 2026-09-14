@@ -8,3 +8,7 @@ authorized migration phases.
 
 Development 0.0.5 provides a normalized single-article model and coherent
 header, hero, body and footer renderers composed by one true parent article.
+
+Development 0.0.6 provides a single-main page shell, explicit skip-link helper,
+semantic sidebar boundary, non-article static pages and author archives that
+reuse the shared author/query/Post Card/listing/pagination services.

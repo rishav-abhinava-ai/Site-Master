@@ -58,7 +58,7 @@ final class Plugin {
 		/**
 		 * Fires after Site Master has resolved its active profile.
 		 *
-		 * No profile-specific feature modules are enabled in Development 0.0.5.
+		 * No profile-specific feature modules are enabled in Development 0.0.6.
 		 */
 		do_action( 'site_master/booted', $profile );
 	}

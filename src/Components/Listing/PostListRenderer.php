@@ -38,9 +38,17 @@ final class PostListRenderer {
 		}
 
 		$content = implode( '', $cards );
+		$classes = array( 'sm-post-list' );
+		foreach ( (array) ( $options['classes'] ?? array() ) as $class ) {
+			$class = sanitize_html_class( (string) $class );
+			if ( '' !== $class && ! in_array( $class, $classes, true ) ) {
+				$classes[] = $class;
+			}
+		}
+		$class_attribute = esc_attr( implode( ' ', $classes ) );
 		$heading = is_string( $options['heading'] ?? null ) ? trim( $options['heading'] ) : '';
 		if ( '' === $heading ) {
-			return '<div class="sm-post-list">' . $content . '</div>';
+			return '<div class="' . $class_attribute . '">' . $content . '</div>';
 		}
 
 		$level = strtolower( (string) ( $options['heading_level'] ?? 'h2' ) );
@@ -53,7 +61,7 @@ final class PostListRenderer {
 			$id = 'sm-post-list-heading-' . self::$heading_sequence;
 		}
 
-		return '<section class="sm-post-list" aria-labelledby="' . esc_attr( $id ) . '"><' . $level . ' id="' . esc_attr( $id ) . '" class="sm-post-list__heading">' . esc_html( $heading ) . '</' . $level . '>' . $content . '</section>';
+		return '<section class="' . $class_attribute . '" aria-labelledby="' . esc_attr( $id ) . '"><' . $level . ' id="' . esc_attr( $id ) . '" class="sm-post-list__heading">' . esc_html( $heading ) . '</' . $level . '>' . $content . '</section>';
 	}
 
 	/** @param array<string,mixed> $options */

@@ -56,7 +56,7 @@ function sm_expect( bool $condition, string $message ): void {
 if ( 'autoload' === $mode ) {
 	require_once dirname( __DIR__ ) . '/site-master.php';
 	sm_expect( class_exists( 'Abhinava\\SiteMaster\\Core\\DependencyStatus' ), 'First-party autoload failed.' );
-	sm_expect( '0.0.5' === SITE_MASTER_DEVELOPMENT_VERSION, 'Development version mismatch.' );
+	sm_expect( '0.0.6' === SITE_MASTER_DEVELOPMENT_VERSION, 'Development version mismatch.' );
 	echo "PASS $mode\n";
 	exit( 0 );
 }

@@ -1015,6 +1015,76 @@ Known Limitations / Follow-up:
 - advanced hero/LCP policy remains Development 0.0.7
 - next authorized phase is 0.0.6; it has not been started
 
+## Development Version 0.0.6 — Static Pages / Author Pages / Sidebar / Accessibility
+
+Date: 2026-09-14
+
+Purpose:
+
+- establish shared page-level semantics, author archives, supplementary sidebar boundaries and accessibility/navigation foundations for both profiles
+- preserve the locked distinction between editorial articles and ordinary static pages
+
+Implemented:
+
+- one `PageShellRenderer` producing a single `main#main`, breadcrumb-first placement and optional sibling content/sidebar layout
+- explicit opt-in `SkipLinkRenderer` targeting `#main`, allowing Theme Builder or fallback shells to add one link only when the active theme does not already provide it
+- `SidebarRenderer` with an accessible label, clean empty/invalid omission and rejection of nested main landmarks
+- normalized `StaticPageViewModel` and low-DOM `StaticPageRenderer` with one fixed H1, optional shared responsive image and single-pass normal WordPress content processing without an article root
+- normalized public-only `AuthorPageViewModel` sourced entirely through `AuthorData`
+- shared author-page composition with decorative adjacent avatar, sanitized public biography, H1 profile identity and H2 post-list section
+- author queries through `EditorialQuery`, Post Cards through the existing card model/renderer, H3 card titles, and existing listing/pagination output
+- valid configurable author empty state without an empty Post List wrapper
+- safe additional listing classes so author pages can reuse `PostListRenderer` while exposing a stable `sm-author-posts` component class
+
+Architecture / Decisions:
+
+- the page shell rejects primary content containing another main element or duplicate `id="main"`; it never nests main landmarks
+- skip-link emission is helper/renderer-driven rather than globally injected, preventing duplication with compliant themes without fragile DOM detection
+- the opt-in skip link remains a normal visible/focusable anchor; no global focus CSS or outline suppression is introduced
+- ordinary static pages use header/H1/content semantics and never inherit the editorial `<article>` renderer by default
+- author hierarchy is H1 author name → H2 Articles by Author → H3 Post Card titles
+- sidebars remain supplementary sibling asides; after-article related content and in-article supplementary content remain separate concepts
+- Elementor registration remains intentionally deferred; Theme Builder owns page layout and may consume these shared boundaries later
+
+Compatibility Preserved:
+
+- `AuthorData`, `profile_picture`, `EditorialQuery`, Post Card/listing/pagination, breadcrumbs and shared image/content boundaries are reused without parallel implementations
+- posts, pages, users, terms, media, URLs, Rank Math metadata, primary-category data and saved Elementor identifiers/data remain unchanged
+- sidebar/page/author rendering introduces no migration, persistent write, legacy widget registration, global template interception or global frontend hook
+- Site Master emits no Person/ProfilePage/WebPage/Breadcrumb/Article schema or SEO metadata; Rank Math remains authoritative
+- 0.0.3 shared-core, 0.0.4 listing and 0.0.5 complete-article behavior remain regression-covered
+
+Files / Modules Materially Affected:
+
+- `src/Components/Accessibility/SkipLinkRenderer.php`
+- `src/Components/Layout/PageShellRenderer.php`, `SidebarRenderer.php`
+- `src/Components/Page/StaticPageViewModel.php`, `StaticPageRenderer.php`
+- `src/Components/Author/AuthorPageViewModel.php`, `AuthorPageRenderer.php`
+- `src/Components/Listing/PostListRenderer.php`, `src/Components/README.md`
+- `src/Elementor/ElementorIntegration.php`, `src/Core/Plugin.php`
+- `tests/page-accessibility-smoke.php`, `tests/README.md`, `tests/scaffold-smoke.php`
+- `site-master.php`, `README.md`, `docs/PROJECT_OVERVIEW.md`, `CODEX_HANDOFF.md`
+
+Validation:
+
+- PHP lint: 47/47 Site Master PHP files passed before version advancement
+- scaffold suite: 14/14 cases passed
+- shared-core suite: 8/8 groups passed
+- Post Card/listing and single-article regression suites passed
+- 0.0.6 page/accessibility suite passed static page main/H1/no-article, breadcrumb order, one-pass content, optional image/empty wrappers, author H1/H2/H3 hierarchy, public bio/avatar, author query, pagination, empty archive, skip-link target and sibling article/sidebar assertions
+- `git diff --check` passed with informational working-copy line-ending notices only
+- executable hygiene scan found no schema/microdata, JSON-LD, custom canonical/robots, prohibited Rank Math override, per-view write, Article Start/End, inline script, JavaScript navigation or frontend asset registration
+- static accessibility/DOM review confirmed crawlable links, one responsive tree, native landmarks, restrained ARIA and no nested interactive controls introduced by these renderers
+
+Known Limitations / Follow-up:
+
+- live WordPress and browser accessibility testing remain NOT RUN because the available CLI PHP lacks the MySQL extension and no usable runtime path is available
+- actual keyboard/focus appearance depends on the active theme when it elects to style the visible opt-in skip-link class; Site Master adds no global theme override
+- Rank Math runtime graph inspection, both-profile rendered output and WordPress log review remain unavailable
+- no PHPCS, PHPStan or PHPUnit configuration is available; dedicated smoke/semantic suites provide current automated coverage
+- no Elementor widgets or legacy adapters are registered yet
+- next authorized phase is 0.0.7; it has not been started
+
 # 19. How Future Entries Must Be Added
 
 After every successful development phase, append a new section:

@@ -37,6 +37,6 @@ The tracks are independent.
 
 ## Current foundation scope
 
-Development 0.0.5 adds one complete modular editorial article renderer—header, hero, normally processed body and optional topics footer under one true `<article>`—to the existing shared core and listing architecture.
+Development 0.0.6 adds the shared single-main page shell, opt-in theme-compatible skip link, semantic sidebar, non-article static-page renderer and author archive/profile composition to the existing article and listing architecture.
 
 Feature implementation belongs to later authorized development phases.

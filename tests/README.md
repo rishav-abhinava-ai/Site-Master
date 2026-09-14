@@ -35,6 +35,16 @@ single-pass WordPress content processing, meaningful modified dates, responsive
 unlinked hero output, topics, escaping, optional-wrapper omission, and the
 Article Start/End prohibition.
 
+Run Development 0.0.6 page/accessibility coverage with:
+
+```text
+php tests/page-accessibility-smoke.php
+```
+
+This verifies non-article static pages, one-main/H1 composition, breadcrumb and
+skip-link placement, author H1/H2/H3 hierarchy, shared author/query/card/listing
+and pagination reuse, empty states, and sibling article/sidebar semantics.
+
 Automated QA infrastructure is introduced in a later authorized development phase.
 
 Do not treat the absence of the future test suite in Development 0.0.1 as permission to skip validation.
