@@ -1,0 +1,20 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Dependencies / generated
+/vendor/
+/node_modules/
+/coverage/
+/.phpunit.cache/
+
+# Local build artifacts
+/build/*.zip
+*.log
+
+# Secrets/local environment
+.env
+.env.*
+!.env.example
