@@ -37,6 +37,6 @@ The tracks are independent.
 
 ## Current foundation scope
 
-Development 0.0.3 provides shared SVG security, author/avatar data, exact date formatting, the Rank Math boundary, visible breadcrumb integration, and RSS featured-image compatibility.
+Development 0.0.4 adds the shared low-DOM editorial Post Card, normalized card data, bounded editorial queries, meaningful listing containers, and crawlable pagination to the 0.0.3 shared-core services.
 
 Feature implementation belongs to later authorized development phases.

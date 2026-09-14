@@ -10,9 +10,30 @@ namespace Abhinava\SiteMaster\Media;
 defined( 'ABSPATH' ) || exit;
 
 final class ImageRenderer {
-	/*
-	 * Implementation intentionally deferred.
-	 * Future renderer must preserve responsive WordPress image attributes and
-	 * use context-aware loading behavior (hero vs card/offscreen).
+	/**
+	 * Render an attachment through WordPress so dimensions and responsive
+	 * source attributes remain intact.
+	 *
+	 * Advanced hero/LCP policy remains reserved for Development 0.0.7.
+	 *
+	 * @param int          $attachment_id Attachment ID.
+	 * @param string|array $size          Registered image size or dimensions.
+	 * @param array        $attributes    Approved image attributes.
 	 */
+	public static function attachment( int $attachment_id, $size = 'medium_large', array $attributes = array() ): string {
+		if ( $attachment_id <= 0 ) {
+			return '';
+		}
+
+		$attributes = array_merge(
+			array(
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+			),
+			$attributes
+		);
+
+		$html = wp_get_attachment_image( $attachment_id, $size, false, $attributes );
+		return is_string( $html ) ? $html : '';
+	}
 }

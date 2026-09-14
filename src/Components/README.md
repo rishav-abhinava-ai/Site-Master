@@ -1,4 +1,7 @@
 # src / Components
 
-Reserved boundary for a later authorized Site Master development phase.
-Do not implement functionality here ahead of the approved development map.
+Shared visible component renderers live here.
+
+Development 0.0.4 provides the low-DOM editorial Post Card and listing
+renderers. Elementor compatibility adapters remain deferred to their
+authorized migration phases.

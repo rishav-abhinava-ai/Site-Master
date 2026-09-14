@@ -886,6 +886,69 @@ Known Limitations / Follow-up:
 - no formal PHPCS, PHPStan or PHPUnit configuration exists yet
 - next authorized phase is 0.0.4; it has not been started
 
+## Development Version 0.0.4 — Low-DOM Editorial Post Card + Listing Components
+
+Date: 2026-09-14
+
+Purpose:
+
+- establish one shared editorial card and listing foundation for Techgenyz and The Blissz
+- make the approved homepage and archive heading hierarchies possible without migrating templates or legacy Elementor widget IDs
+
+Implemented:
+
+- normalized `PostCardViewModel` boundary for post identity, permalink, title, image, primary category, excerpt, author and published/modified dates
+- one semantic `PostCardRenderer` rooted at `<article class="sm-post-card">` with optional image, caption, category, excerpt, author, avatar and date output
+- safe homepage H3 and archive/category/tag/search H2 defaults with an H2–H6 allow-list and context-aware invalid-value fallback
+- WordPress responsive attachment rendering with lazy card-image defaults, no blanket high fetch priority, no broken/empty media wrapper and conditional figure/figcaption output
+- compatible Rank Math primary-category lookup, Yoast fallback and assigned WordPress-category fallback without metadata writes
+- manual-first, shortcode-free, plain-text bounded excerpts without arbitrary content rendering
+- bounded `EditorialQuery` service with allow-listed post type, taxonomy, ordering, status, IDs, author, pagination and sticky handling
+- direct sibling-card listing output, meaningful section/heading behavior, empty-result suppression and crawlable pagination navigation
+- render-from-normalized-data behavior that does not call `setup_postdata()` or mutate the global query/post
+
+Architecture / Decisions:
+
+- editorial Post Cards and future editorial review cards may share the `<article>` renderer; Product and Brand/Company cards must use their separate entity/list architecture
+- layout differences belong to options/classes/CSS rather than duplicated desktop/mobile markup or separate site renderers
+- Elementor registration is intentionally deferred because the shared architecture can be validated independently; legacy IDs remain reserved for Development 0.0.8 adapters
+- the initial editorial query allow-list contains standard `post`; future editorial post types must be explicitly supplied by trusted integration code
+- advanced hero/LCP media policy remains Development 0.0.7; 0.0.4 only adds the safe offscreen/card attachment path
+
+Compatibility Preserved:
+
+- `rank_math_primary_category`, `_yoast_wpseo_primary_category`, `profile_picture`, author/date services, posts, terms, users, media, URLs and Rank Math metadata are read without mutation
+- no legacy Elementor widget/control ID was registered, removed or changed
+- no migration, persistent write, global query mutation, analytics runtime, date AJAX action or frontend asset was introduced
+- Rank Math remains the sole SEO/schema owner; Site Master card/listing output contains no schema or SEO metadata
+
+Files / Modules Materially Affected:
+
+- `src/Components/PostCard/PostCardViewModel.php`, `src/Components/PostCard/PostCardRenderer.php`
+- `src/Components/Listing/PostListRenderer.php`, `src/Components/Listing/PaginationRenderer.php`
+- `src/Content/PostData.php`, `src/Content/EditorialQuery.php`, `src/Media/ImageRenderer.php`
+- `src/Components/README.md`, `src/Elementor/ElementorIntegration.php`
+- `tests/post-card-listing-smoke.php`, `tests/README.md`, `tests/scaffold-smoke.php`
+- `site-master.php`, `README.md`, `docs/PROJECT_OVERVIEW.md`, `CODEX_HANDOFF.md`
+
+Validation:
+
+- PHP lint: 31/31 Site Master PHP files passed before version advancement
+- scaffold suite: 14/14 cases passed
+- shared-core suite: 8/8 groups passed
+- Post Card/listing suite passed view-model, heading, image/figure, category, author/date, excerpt, escaping, listing, query, pagination and global-state assertions
+- `git diff --check` passed; line-ending conversion warnings were informational only
+- executable hygiene scan found no schema/microdata, JSON-LD, prohibited Rank Math override, per-view write, analytics collector, legacy date AJAX, global-post setup, frontend asset or inline-script pattern
+- performance was reviewed statically: queries are bounded, fixed collections disable found rows, paginated collections preserve them, and normal WordPress post/meta/term caches remain enabled
+
+Known Limitations / Follow-up:
+
+- live WordPress rendering could not run because the available CLI PHP lacks the MySQL extension; browser DOM, query-count profiling, both-profile output and WordPress log checks are therefore NOT RUN
+- no PHPCS, PHPStan or PHPUnit configuration exists; the dedicated PHP smoke/render suites provide current automated coverage
+- no frontend CSS is included; layout styling and Elementor adapters remain intentionally deferred
+- advanced image/LCP work remains Development 0.0.7
+- next authorized phase is 0.0.5; it has not been started
+
 # 19. How Future Entries Must Be Added
 
 After every successful development phase, append a new section:
