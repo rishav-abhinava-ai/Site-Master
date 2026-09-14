@@ -949,6 +949,72 @@ Known Limitations / Follow-up:
 - advanced image/LCP work remains Development 0.0.7
 - next authorized phase is 0.0.5; it has not been started
 
+## Development Version 0.0.5 — Modular Single-Article Architecture
+
+Date: 2026-09-14
+
+Purpose:
+
+- establish one shared complete editorial-article composition for Techgenyz news, general editorial content and The Blissz lifestyle/blog posts
+- prevent the legacy structural failure where the article header closed before separately rendered post content
+
+Implemented:
+
+- normalized `SingleArticleViewModel` for post identity/type, permalink, headline, manual summary, primary category, shared author data, published/meaningfully modified dates, featured image, raw article content and topics
+- coherent header renderer with one fixed H1, optional visible category/summary, shared author/avatar output and compact published/updated metadata
+- hero renderer using the shared image boundary with responsive WordPress attachment output, non-linked default, optional real caption and a distinct eager hero context without blanket high fetch priority
+- article-body renderer that invokes the normal `the_content` boundary once and leaves Gutenberg, approved shortcodes, embeds and internal content markup to WordPress
+- optional topics footer using standard crawlable tag links and no empty footer when topics are unavailable/disabled
+- `SingleArticleRenderer` that composes header, hero, body and footer inside one real `<article class="sm-article">`
+- documented 60-second meaningful-modification threshold, preventing effectively identical timestamps from producing an Updated label
+- non-invasive Elementor article-container convention helper requiring a native Container with HTML Tag `article`
+
+Architecture / Decisions:
+
+- the PHP renderer is the complete semantic fallback/test/future-rendering boundary; Elementor Theme Builder remains preferred for page layout
+- Elementor components and legacy widget adapters are intentionally deferred because the complete PHP composition proves semantics without introducing saved-template risk
+- no Article Start or Article End widget/class is permitted; Site Master does not rewrite arbitrary Elementor output or force nesting with buffering/regular expressions
+- breadcrumbs, after-article related stories and the site sidebar remain outside the primary article; their full composition belongs to later authorized phases
+- visible summaries use the manual WordPress excerpt only and never consume Rank Math descriptions
+- Product entities, company profiles and static pages do not use this editorial article renderer
+
+Compatibility Preserved:
+
+- shared `AuthorData`, `DateFormatter`, `PostData` primary-category resolution and `ImageRenderer` are reused rather than duplicated
+- post/content/image/category/tag/author IDs and relationships, `profile_picture`, Rank Math metadata, primary-category metadata, URLs and saved Elementor data remain unchanged
+- normal body content is passed through the established WordPress content filter exactly once by the renderer
+- no migration, persistent write, legacy widget-ID registration, analytics runtime, post-view increment or frontend asset was introduced
+- Rank Math remains sole schema/SEO owner; Site Master article output contains no schema or SEO metadata
+
+Files / Modules Materially Affected:
+
+- `src/Components/Article/SingleArticleViewModel.php`, `SingleArticleRenderer.php`
+- `src/Components/Article/ArticleHeaderRenderer.php`, `ArticleHeroRenderer.php`, `ArticleBodyRenderer.php`, `ArticleFooterRenderer.php`
+- `src/Elementor/ArticleContainerConvention.php`, `src/Elementor/ElementorIntegration.php`
+- `src/Media/ImageRenderer.php`, `src/Support/DateFormatter.php`, `src/Components/README.md`
+- `tests/single-article-smoke.php`, `tests/README.md`, `tests/scaffold-smoke.php`
+- `site-master.php`, `README.md`, `docs/PROJECT_OVERVIEW.md`, `CODEX_HANDOFF.md`
+
+Validation:
+
+- PHP lint: 39/39 Site Master PHP files passed before version advancement
+- scaffold suite: 14/14 cases passed
+- shared-core suite: 8/8 groups passed
+- Post Card/listing regression suite passed
+- single-article suite passed parent-article/H1 structure, old split-body regression, header options, shared author/category/date data, meaningful modified threshold, responsive unlinked hero, caption/absence, single-pass content filtering, topics/absence, escaping and Article Start/End prohibition assertions
+- `git diff --check` passed with informational working-copy line-ending notices only
+- executable hygiene scan found no schema/microdata, JSON-LD, custom canonical/robots, prohibited Rank Math overrides, per-view write, legacy date AJAX, Article Start/End class, inline script or frontend asset registration
+- static performance review found no secondary article query, global query/post mutation, remote request or new asset/runtime overhead
+
+Known Limitations / Follow-up:
+
+- live WordPress rendering remains NOT RUN because the available CLI PHP lacks the MySQL extension; actual DOM, Rank Math graph comparison, both-profile output and WordPress log review remain unavailable
+- no PHPCS, PHPStan or PHPUnit configuration is available; dedicated PHP smoke/semantic suites provide current automated coverage
+- no new Elementor widgets or legacy adapters exist yet; templates must later follow the documented native article-container convention
+- related-story engine, sidebar/page layout and static-page architecture remain intentionally outside this phase
+- advanced hero/LCP policy remains Development 0.0.7
+- next authorized phase is 0.0.6; it has not been started
+
 # 19. How Future Entries Must Be Added
 
 After every successful development phase, append a new section:

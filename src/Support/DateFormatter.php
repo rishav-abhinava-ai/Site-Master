@@ -56,9 +56,10 @@ final class DateFormatter {
 		return '<time ' . implode( ' ', $parts ) . '>' . esc_html( $value['text'] ) . '</time>';
 	}
 
-	public static function meaningfully_modified( int $post_id ): bool {
+	public static function meaningfully_modified( int $post_id, int $threshold = 60 ): bool {
 		$published = self::published( $post_id );
 		$modified  = self::modified( $post_id );
-		return null !== $published && null !== $modified && $modified['timestamp'] > $published['timestamp'];
+		$threshold = max( 1, $threshold );
+		return null !== $published && null !== $modified && ( $modified['timestamp'] - $published['timestamp'] ) >= $threshold;
 	}
 }

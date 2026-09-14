@@ -37,6 +37,6 @@ The tracks are independent.
 
 ## Current foundation scope
 
-Development 0.0.4 adds the shared low-DOM editorial Post Card, normalized card data, bounded editorial queries, meaningful listing containers, and crawlable pagination to the 0.0.3 shared-core services.
+Development 0.0.5 adds one complete modular editorial article renderer—header, hero, normally processed body and optional topics footer under one true `<article>`—to the existing shared core and listing architecture.
 
 Feature implementation belongs to later authorized development phases.

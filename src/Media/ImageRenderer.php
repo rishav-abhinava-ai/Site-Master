@@ -36,4 +36,19 @@ final class ImageRenderer {
 		$html = wp_get_attachment_image( $attachment_id, $size, false, $attributes );
 		return is_string( $html ) ? $html : '';
 	}
+
+	/** Render a likely primary article image without blanket lazy/high-priority policy. */
+	public static function hero( int $attachment_id, $size = 'full', array $attributes = array() ): string {
+		return self::attachment(
+			$attachment_id,
+			$size,
+			array_merge(
+				array(
+					'loading'  => 'eager',
+					'decoding' => 'async',
+				),
+				$attributes
+			)
+		);
+	}
 }

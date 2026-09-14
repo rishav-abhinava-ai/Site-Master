@@ -24,6 +24,17 @@ This covers normalized data, semantic/escaped low-DOM markup, heading contexts,
 images and figures, category fallbacks, author/date/excerpt options, safe query
 normalization, pagination, and global-post isolation.
 
+Run Development 0.0.5 single-article coverage with:
+
+```text
+php tests/single-article-smoke.php
+```
+
+This verifies one real parent article/H1, nested header/hero/body/footer,
+single-pass WordPress content processing, meaningful modified dates, responsive
+unlinked hero output, topics, escaping, optional-wrapper omission, and the
+Article Start/End prohibition.
+
 Automated QA infrastructure is introduced in a later authorized development phase.
 
 Do not treat the absence of the future test suite in Development 0.0.1 as permission to skip validation.
