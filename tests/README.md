@@ -1,5 +1,7 @@
 # Tests
 
+`blissz-compatibility-smoke.php` verifies the Development 0.0.8 Blissz-only adapter, legacy widget/control resolution, representative rendering, article composition, avatar-key coexistence policy, profile isolation, and prohibited-output boundaries against the source-derived fixture in `tests/fixtures/`.
+
 Run the Development 0.0.2 scaffold checks with:
 
 ```text

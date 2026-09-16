@@ -47,8 +47,12 @@ final class PostCardRenderer {
 			$parts[] = '<a class="sm-post-card__category" href="' . esc_url( (string) $data['category']['url'] ) . '">' . esc_html( (string) $data['category']['name'] ) . '</a>';
 		}
 
-		$tag     = $options['heading_level'];
-		$parts[] = '<' . $tag . ' class="sm-post-card__title"><a href="' . esc_url( $data['permalink'] ) . '">' . esc_html( $data['title'] ) . '</a></' . $tag . '>';
+		if ( $options['show_title'] ) {
+			$tag     = $options['heading_level'];
+			$title   = esc_html( $data['title'] );
+			$title   = $options['link_title'] ? '<a href="' . esc_url( $data['permalink'] ) . '">' . $title . '</a>' : $title;
+			$parts[] = '<' . $tag . ' class="sm-post-card__title">' . $title . '</' . $tag . '>';
+		}
 
 		if ( $options['show_excerpt'] && '' !== trim( $data['excerpt'] ) ) {
 			$parts[] = '<p class="sm-post-card__excerpt">' . esc_html( $data['excerpt'] ) . '</p>';
@@ -74,6 +78,12 @@ final class PostCardRenderer {
 		}
 		if ( array() !== $meta ) {
 			$parts[] = '<p class="sm-post-card__meta">' . implode( '', $meta ) . '</p>';
+		}
+		if ( $options['show_reading_time'] && $options['reading_minutes'] > 0 ) {
+			$parts[] = '<span class="sm-post-card__reading-time">' . esc_html( sprintf( _n( '%d min read', '%d min read', $options['reading_minutes'], 'site-master' ), $options['reading_minutes'] ) ) . '</span>';
+		}
+		if ( $options['show_button'] && '' !== $options['button_text'] ) {
+			$parts[] = '<a class="sm-post-card__button" href="' . esc_url( $data['permalink'] ) . '">' . esc_html( $options['button_text'] ) . '</a>';
 		}
 
 		$classes = array_merge( array( 'sm-post-card' ), $options['classes'] );
@@ -108,6 +118,12 @@ final class PostCardRenderer {
 			'show_author'   => ! array_key_exists( 'show_author', $options ) || (bool) $options['show_author'],
 			'show_date'     => ! array_key_exists( 'show_date', $options ) || (bool) $options['show_date'],
 			'show_avatar'   => ! empty( $options['show_avatar'] ),
+			'show_title'    => ! array_key_exists( 'show_title', $options ) || (bool) $options['show_title'],
+			'link_title'    => ! array_key_exists( 'link_title', $options ) || (bool) $options['link_title'],
+			'show_reading_time' => ! empty( $options['show_reading_time'] ),
+			'reading_minutes' => max( 0, absint( $options['reading_minutes'] ?? 0 ) ),
+			'show_button'   => ! empty( $options['show_button'] ),
+			'button_text'   => sanitize_text_field( (string) ( $options['button_text'] ?? '' ) ),
 			'date_type'     => 'modified' === ( $options['date_type'] ?? '' ) ? 'modified' : 'published',
 			'heading_level' => $heading,
 			'image_size'    => ImageRenderer::size( $options['image_size'] ?? 'medium_large' ),

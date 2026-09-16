@@ -10,6 +10,8 @@ namespace Abhinava\SiteMaster\Core;
 use Abhinava\SiteMaster\Admin\StatusPage;
 use Abhinava\SiteMaster\Content\AuthorData;
 use Abhinava\SiteMaster\Content\RssFeaturedImage;
+use Abhinava\SiteMaster\Elementor\ElementorIntegration;
+use Abhinava\SiteMaster\Elementor\Compatibility\Blissz\BlisszCompatibility;
 use Abhinava\SiteMaster\Profiles\ProfileResolver;
 use Abhinava\SiteMaster\Security\SvgSanitizer;
 use Abhinava\SiteMaster\SEO\RankMathBridge;
@@ -46,10 +48,14 @@ final class Plugin {
 		);
 
 		$profile = ProfileResolver::resolve();
+		if ( ProfileResolver::BLISSZ === $profile->key() ) {
+			( new BlisszCompatibility() )->register();
+		}
 		( new SvgSanitizer() )->register();
 		( new AuthorData() )->register();
 		( new RankMathBridge() )->register();
 		( new RssFeaturedImage() )->register();
+		( new ElementorIntegration( $profile ) )->register();
 
 		if ( is_admin() ) {
 			( new StatusPage( $profile ) )->register();
@@ -58,7 +64,7 @@ final class Plugin {
 		/**
 		 * Fires after Site Master has resolved its active profile.
 		 *
-		 * No profile-specific feature modules are enabled in Development 0.0.7.
+		 * Blissz compatibility is profile-gated in Development 0.0.8.
 		 */
 		do_action( 'site_master/booted', $profile );
 	}

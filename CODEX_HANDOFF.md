@@ -1204,3 +1204,57 @@ Post-completion compatibility-contract correction (2026-09-16):
 - `COMPATIBILITY-CONTRACT.md`, `MIGRATION-MAP.md` and the durable media policy were corrected; both keys and referenced attachment IDs are protected persistent identifiers.
 - No user meta or attachment data was migrated or rewritten, and the current `AuthorData` runtime remains unchanged at 0.0.7.
 - The Blissz compatibility adapter, including evidence-based read precedence and write behavior, remains reserved for Development 0.0.8.
+
+## Development Version 0.0.8 — The Blissz Migration
+
+Date: 2026-09-17
+
+Purpose: Replace the future runtime dependency on Blissz Master with a Blissz-profile compatibility layer that resolves its persisted Elementor widget/control identifiers through Site Master's shared components.
+
+Implemented:
+- Added a profile-gated Elementor category and adapters for all eight source-derived Blissz widget IDs: breadcrumb, date, author, content, search form, loop post, loop category and single-post fragment.
+- Added a durable fixture containing exact source paths, hashes, sections, 408 direct control IDs, group-control names, representative settings and per-control compatibility classification.
+- Reused shared breadcrumb, date, author, content, Post Card, article and image boundaries instead of copying legacy implementations.
+- Added deterministic Blissz avatar compatibility: read `tbm_profile_picture` first, fall back to `profile_picture`, and write only the legacy Blissz key without copying or synchronizing data.
+- Preserved the source search widget's actual GET-form behavior and current-post/current-term loop behavior; no invented query system was added.
+
+Architecture / Decisions:
+- Techgenyz and unconfigured profiles register no Blissz category, widgets or avatar-key filters.
+- The single-post widget emits a header/media fragment and relies on the native Elementor parent container configured as `article`; the content widget emits the body. This avoids invalid cross-widget tags while retaining one article and one H1 when composed correctly.
+- Saved single-post H1 remains the article H1; a saved loop-card H1 is normalized to H3 to preserve the reusable-card heading contract.
+- Direct legacy control IDs remain recognized. Existing compiled Elementor CSS and retained legacy classes provide the style compatibility path; live CSS regeneration remains unverified.
+- Alternate-template, inline related-post and advertisement settings are recognized but inactive. `enable_schema` is recognized and ignored. Legacy AJAX date fan-out, scripts, schema/microdata and Rank Math overrides are retired.
+
+Compatibility Preserved:
+- Existing posts, users, terms, attachments, URLs, Elementor widget/control IDs, saved Elementor data, both avatar keys, category metadata and Rank Math data are not migrated or rewritten.
+- Attachment rendering, alt policy, responsive attributes, author fallback, one-pass content filtering, standard links, card semantics and article H1 behavior continue through shared components.
+- No global template replacement, CSS/JavaScript asset, analytics, schema, microdata, JSON-LD or production-data migration was introduced.
+
+Files / Modules Materially Affected:
+- `src/Elementor/Compatibility/Blissz/*`, `src/Elementor/ElementorIntegration.php`, `src/Core/Plugin.php`, `src/Content/AuthorData.php`.
+- `tests/blissz-compatibility-smoke.php`, `tests/fixtures/blissz-elementor-controls.json`, `tests/README.md`.
+- `docs/BLISSZ-COMPATIBILITY.md`, `docs/PROJECT_OVERVIEW.md`, `README.md`, `site-master.php`, `CODEX_HANDOFF.md`.
+
+Validation:
+- PHP 8.2.29: all 60 Site Master PHP files linted with zero failures before version advancement.
+- Scaffold, shared-core, Post Card/listing, single-article, page/accessibility, media/CWV and Blissz compatibility suites passed.
+- Compatibility coverage verifies Blissz-only registration, all eight widget IDs, exact fixture/runtime control inventory, representative saved settings, avatar precedence/coexistence/write behavior, one-pass content, native article composition, no AJAX endpoint and no schema/microdata output.
+- Fixture audit: 8 widgets, 408 unique direct control IDs, complete per-control classifications and valid source hashes.
+- `git diff --check` passed; Git emitted only configured LF/CRLF normalization notices.
+
+Known Limitations / Follow-up:
+- Local MySQL was unavailable, so live WordPress/Elementor editor loading, actual production `_elementor_data`, category/user metadata fixtures, responsive browser comparison, Elementor CSS regeneration and runtime log review were NOT RUN. Source-derived synthetic fixtures are identified as such.
+- Existing compiled Elementor CSS is expected to remain applicable through recognized settings, normal wrappers and retained classes; regenerated style-control output is not claimed as verified.
+- Alternate-template, inline related-post and advertisement execution remains deferred rather than duplicating unsafe legacy behavior.
+- Composer, PHPCS, PHPStan and PHPUnit configurations are unavailable; dedicated executable smoke suites provide current automated coverage.
+- Production ledger remains `NONE`; no production ZIP or Git mutation was performed. Next authorized phase is 0.0.9 and has not been started.
+
+Post-completion verification correction (2026-09-17 — Elementor compatibility):
+- Replaced blanket hidden placeholders with a structured source-derived control registry: 408 direct controls, 178 responsive controls, 65 confirmed top-level group controls and 263 translated selector-bearing style controls.
+- Responsive and group controls now use Elementor's responsive/group registration paths; persistence-only controls alone fall back to hidden registration. Selector families target current adapter/shared DOM rather than restoring legacy wrapper trees.
+- Added explicit `SUPPORTED`, `NORMALIZED`, `INTENTIONALLY_INACTIVE` and `PERSISTENCE_ONLY` treatment for every direct control. Alternate templates, related insertion, advertisements and legacy schema remain inactive with saved values untouched.
+- Loop Post now respects title visibility/linking, bounded date formats, content-derived reading time and crawlable read-more button settings. Single Post keeps its canonical H1 while mapping date, reading-time and optional button behavior.
+- Search input IDs are deterministic per Elementor widget instance, and labels reference the matching unique field.
+- Reconciled durable avatar documentation with runtime policy: Blissz reads `tbm_profile_picture` first, falls back to `profile_picture`, writes/removes only `tbm_profile_picture`, performs no synchronization and never deletes attachments.
+- Static registration/selector behavior is verified with narrow Elementor doubles. Live Elementor CSS regeneration, production `_elementor_data`, browser comparison and runtime log review remain NOT RUN because the local WordPress database was unavailable.
+- Development and plugin versions remain 0.0.8; channel remains development; production ledger remains NONE; no ZIP or Git mutation was performed.

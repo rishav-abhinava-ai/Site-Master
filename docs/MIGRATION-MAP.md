@@ -34,7 +34,7 @@ Classification vocabulary: **SHARED CORE**, **TECHGENYZ PROFILE**, **BLISSZ PROF
 
 ## Development 0.0.8 author-media requirement
 
-The Blissz migration must recognize existing `tbm_profile_picture` values, preserve their referenced attachment IDs, reuse the shared AuthorData/avatar presentation path, retain WordPress avatar fallback and avoid destructive user-meta migration. `tbm_profile_picture` and `profile_picture` remain separate persisted histories. Read precedence and future edit/write or synchronization behavior are deliberately undecided until representative sanitized Blissz production fixtures are inspected.
+The Blissz migration recognizes existing `tbm_profile_picture` values, preserves their referenced attachment IDs, reuses the shared AuthorData/avatar presentation path, retains WordPress avatar fallback and avoids destructive user-meta migration. `tbm_profile_picture` and `profile_picture` remain separate persisted histories. The implemented 0.0.8 policy reads `tbm_profile_picture` first, falls back to `profile_picture`, writes or removes only the Blissz relationship, and performs no synchronization or attachment deletion. This policy is covered by source-derived synthetic fixtures; a sanitized production database fixture was unavailable.
 
 ## Scaffold conclusion
 

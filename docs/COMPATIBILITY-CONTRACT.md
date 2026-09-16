@@ -34,7 +34,7 @@ Site Master must preserve existing records, IDs, URLs, settings, saved templates
 
 ## Distinct legacy author-media identifiers
 
-`profile_picture` (Techgenyz) and `tbm_profile_picture` (Blissz) are distinct protected persisted identifiers. Neither key nor its referenced attachment IDs may be destructively renamed, deleted, copied in bulk or rewritten merely to unify Site Master internals. Compatibility must follow `legacy persisted identifier -> compatibility adapter/service -> Site Master`. Development `0.0.8` must inspect representative sanitized Blissz fixtures before deciding read precedence or future write/synchronization behavior.
+`profile_picture` (Techgenyz) and `tbm_profile_picture` (Blissz) are distinct protected persisted identifiers. Neither key nor its referenced attachment IDs may be destructively renamed, deleted, copied in bulk or rewritten merely to unify Site Master internals. Compatibility follows `legacy persisted identifier -> compatibility adapter/service -> Site Master`. Development `0.0.8` implements this Blissz policy: read `tbm_profile_picture` first, fall back to `profile_picture`, write/delete only the `tbm_profile_picture` relationship, and never synchronize the keys or delete the referenced attachment.
 
 ## WordPress, SEO and lifecycle guarantees
 

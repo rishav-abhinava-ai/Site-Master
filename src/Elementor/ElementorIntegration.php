@@ -1,26 +1,25 @@
 <?php
-/**
- * Elementor integration boundary.
- *
- * @package SiteMaster
- */
+/** Profile-aware Elementor integration boundary. @package SiteMaster */
 
 namespace Abhinava\SiteMaster\Elementor;
+
+use Abhinava\SiteMaster\Elementor\Compatibility\Blissz\BlisszCompatibility;
+use Abhinava\SiteMaster\Profiles\ProfileInterface;
 
 defined( 'ABSPATH' ) || exit;
 
 final class ElementorIntegration {
+	private ProfileInterface $profile;
+
+	public function __construct( ProfileInterface $profile ) {
+		$this->profile = $profile;
+	}
 
 	public function register(): void {
-		/*
-		 * The shared Post Card/listing architecture does not require Elementor.
-		 * The same is true for the complete PHP article renderer. Theme Builder
-		 * should use one native Container with HTML Tag = article; the convention
-		 * helper documents/validates that tag without rewriting Elementor output.
-		 * Widget registration and legacy-ID adapters remain deferred.
-		 * Page/author/sidebar/skip-link renderers likewise remain shared PHP
-		 * boundaries; a Theme Builder document opts into the page shell and skip
-		 * link only when the active theme does not already provide them.
-		 */
+		if ( 'blissz' !== $this->profile->key() ) {
+			return;
+		}
+		add_action( 'elementor/elements/categories_registered', array( BlisszCompatibility::class, 'register_category' ) );
+		add_action( 'elementor/widgets/register', array( BlisszCompatibility::class, 'register_widgets' ) );
 	}
 }

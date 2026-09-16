@@ -1,4 +1,4 @@
-# Shared media policy — Development 0.0.7
+# Shared media policy ï¿½ Development 0.0.7
 
 ImageRenderer is the single attachment-image boundary. It delegates URLs, intrinsic width/height, responsive srcset, default sizes, attachment alt and decoding to WordPress. It never fetches remote images, converts formats, creates a proxy, adds JavaScript, or changes global media filters.
 
@@ -12,4 +12,4 @@ Attachment alt metadata is preserved, including empty alt. Missing card/hero alt
 
 No custom preload is implemented because reliable layout/responsive-request evidence is unavailable. This is a static media architecture improvement; no measured LCP, CLS or PageSpeed claim is made.
 
-Legacy source inspection confirmed distinct author-media keys: Blissz uses `tbm_profile_picture` and Techgenyz uses `profile_picture`. Both are protected persistent identifiers, including their referenced attachment IDs. Site Master does not destructively rename either key. Current `AuthorData` runtime remains on `profile_picture`; Development `0.0.8` must implement Blissz compatibility through an adapter after sanitized fixture inspection, without assuming read precedence or future write/synchronization behavior.
+Legacy source inspection confirmed distinct author-media keys: Blissz uses `tbm_profile_picture` and Techgenyz uses `profile_picture`. Both are protected persistent identifiers, including their referenced attachment IDs. Site Master does not destructively rename either key. Under the Blissz profile, Development `0.0.8` reads `tbm_profile_picture` first, falls back to `profile_picture`, writes or removes only the Blissz relationship, never synchronizes the keys, and never deletes the referenced Media Library attachment.

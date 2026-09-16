@@ -39,9 +39,37 @@ final class AuthorData {
 	}
 
 	public static function attachment_id( int $user_id ): int {
-		$value = get_user_meta( $user_id, self::META_KEY, true );
-		$id    = is_numeric( $value ) ? absint( $value ) : 0;
-		return self::valid_image_attachment( $id ) ? $id : 0;
+		$keys = function_exists( 'apply_filters' ) && function_exists( 'has_filter' ) && has_filter( 'site_master/author_image_meta_keys' )
+			? apply_filters( 'site_master/author_image_meta_keys', array( self::META_KEY ), $user_id )
+			: array( self::META_KEY );
+		foreach ( self::normalize_meta_keys( $keys ) as $key ) {
+			$value = get_user_meta( $user_id, $key, true );
+			$id    = is_numeric( $value ) ? absint( $value ) : 0;
+			if ( self::valid_image_attachment( $id ) ) {
+				return $id;
+			}
+		}
+		return 0;
+	}
+
+	/** @return string[] */
+	private static function normalize_meta_keys( $keys ): array {
+		$normalized = array();
+		foreach ( is_array( $keys ) ? $keys : array( $keys ) as $key ) {
+			$key = sanitize_key( (string) $key );
+			if ( '' !== $key && ! in_array( $key, $normalized, true ) ) {
+				$normalized[] = $key;
+			}
+		}
+		return array() !== $normalized ? $normalized : array( self::META_KEY );
+	}
+
+	private static function write_meta_key( int $user_id ): string {
+		$key = function_exists( 'apply_filters' ) && function_exists( 'has_filter' ) && has_filter( 'site_master/author_image_write_meta_key' )
+			? apply_filters( 'site_master/author_image_write_meta_key', self::META_KEY, $user_id )
+			: self::META_KEY;
+		$key = sanitize_key( is_string( $key ) ? $key : '' );
+		return '' !== $key ? $key : self::META_KEY;
 	}
 
 	public static function valid_image_attachment( int $attachment_id ): bool {
@@ -80,15 +108,16 @@ final class AuthorData {
 		}
 
 		$attachment_id = isset( $_POST['site_master_profile_picture_id'] ) ? absint( wp_unslash( $_POST['site_master_profile_picture_id'] ) ) : 0;
+		$meta_key      = self::write_meta_key( $user_id );
 		if ( 0 === $attachment_id ) {
-			delete_user_meta( $user_id, self::META_KEY );
+			delete_user_meta( $user_id, $meta_key );
 			return true;
 		}
 		if ( ! self::valid_image_attachment( $attachment_id ) ) {
 			return false;
 		}
 
-		update_user_meta( $user_id, self::META_KEY, $attachment_id );
+		update_user_meta( $user_id, $meta_key, $attachment_id );
 		return true;
 	}
 

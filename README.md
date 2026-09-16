@@ -4,7 +4,7 @@ Site Master is the shared WordPress plugin being developed for **Techgenyz** and
 
 ## Current development version
 
-`0.0.7`
+`0.0.8`
 
 The authoritative value is `SITE_MASTER_DEVELOPMENT_VERSION` in `site-master.php`.
 
