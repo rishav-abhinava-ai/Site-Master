@@ -37,6 +37,8 @@ The tracks are independent.
 
 ## Current foundation scope
 
-Development 0.0.6 adds the shared single-main page shell, opt-in theme-compatible skip link, semantic sidebar, non-article static-page renderer and author archive/profile composition to the existing article and listing architecture.
+Development 0.0.6 added the shared single-main page shell, opt-in theme-compatible skip link, semantic sidebar, non-article static-page renderer and author archive/profile composition to the existing article and listing architecture.
 
 Feature implementation belongs to later authorized development phases.
+
+Development 0.0.7 hardens the shared attachment-image policy across cards, articles, static pages, custom avatars and RSS. See `MEDIA-POLICY.md` for normalized options, layout responsibilities and validation limits.

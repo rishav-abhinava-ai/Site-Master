@@ -1,6 +1,6 @@
 # CODEX_HANDOFF.md â€” Site Master Implementation Context
 
-Last updated: 2026-09-14
+Last updated: 2026-09-15
 
 ## Version Authority Notice
 
@@ -1150,3 +1150,57 @@ The following are currently considered locked unless explicitly changed:
 18. Existing persistent identifiers and data are preserved.
 19. Stronger SVG sanitization is shared.
 20. Production packaging never modifies the working development source merely to assign a production release version.
+
+
+## Development Version 0.0.7 — Media / Image Rendering / Core Web Vitals
+
+Date: 2026-09-15
+
+Purpose: Establish one safe shared attachment-image policy while preserving approved semantic components.
+
+Implemented:
+- Controlled semantic contexts, independent loading/priority intent, normalized allow-listed options and validated registered image sizes/dimension pairs.
+- Explicit high priority forces eager; no default first-card or blanket hero high priority. WordPress retains responsive srcset, intrinsic dimensions and decoding policy.
+- Cards/articles/static pages forward layout-specific sizes/loading/priority. Custom avatars and RSS reuse the shared renderer; avatars cannot receive high priority and feed hints are omitted.
+- Attachment alt metadata, including empty alt, replaces the previously fabricated post-title fallback without writing metadata.
+
+Architecture / Decisions:
+- No custom preload, image proxy, conversion, remote render request, CSS crop policy, JavaScript loader or global optimization filter.
+- Layout determines viewport knowledge, sizes and at most one explicit high-priority candidate. Auto leaves optimization to core.
+- Read-only legacy ZIP inspection found tbm_profile_picture in Blissz versus profile_picture in Techgenyz; document the discrepancy for fixture-based Phase 0.0.8 compatibility work. No migration in this phase.
+
+Compatibility Preserved:
+- Existing attachment relationships, IDs, stored alt/captions, profile_picture, avatar fallback, feeds, URLs, Elementor data and Rank Math ownership.
+- Editorial article/H1 boundaries, card links/headings, hero non-linking, figure/caption semantics and page/author/sidebar composition.
+- SVG sanitizer dependency and fail-closed behavior unchanged. Production ledger unchanged; no ZIP or Git mutation.
+
+Files / Modules Materially Affected:
+- src/Media/ImageRenderer.php; PostCard renderer/view model; Article hero/renderer/view model; StaticPage renderer; AuthorData; RssFeaturedImage.
+- tests/media-cwv-smoke.php (new), shared-core/scaffold suites and tests/README.md.
+- site-master.php, src/Core/Plugin.php, README.md, docs/PROJECT_OVERVIEW.md, docs/MEDIA-POLICY.md (new), CODEX_HANDOFF.md.
+
+Validation:
+- PHP 8.2.29: all 48 PHP files linted, zero syntax failures.
+- Scaffold, shared-core, post-card/listing, single-article, page/accessibility and media/CWV suites passed.
+- Media DOM/stub assertions cover dimensions, responsive attributes, size validation, alt, unsafe options, priority conflicts, multi-card default priority, figures, static-page empty media, avatars and feed duplication.
+- Executable hygiene scan and static review: no schema/social output, remote render fetch, global media filters, frontend assets, analytics or per-view postmeta writes introduced.
+- git diff --check passed; Git may emit its configured LF/CRLF normalization warning.
+
+Known Limitations / Follow-up:
+- Composer CLI unavailable; dependency installation/Composer validation NOT RUN. Actual sanitizer unavailable; SVG fail-closed smoke passed, positive sanitizer suite uses a test double.
+- Live WordPress, both-profile browser DOM/network output, Lighthouse/CWV measurement and runtime log correlation NOT RUN: available PHP has no mysqli/pdo_mysql and renderers are not yet connected to site layouts. No performance scores claimed.
+- No PHPCS/PHPStan/PHPUnit configuration; dedicated suites supply static coverage.
+- Confirm Blissz tbm_profile_picture and saved Elementor fixtures during Phase 0.0.8. Existing compatibility/source-audit documents were not rewritten.
+- Next phase is 0.0.8 — The Blissz Migration; not started.
+
+
+Post-completion verification correction (2026-09-16):
+- Linked Post Card media with an empty attachment alt now receives a safely escaped accessible link label derived from the normalized article headline.
+- Attachment alt behavior itself remains unchanged; meaningful image alt text does not receive a duplicate link label, and the same fallback applies inside caption figures.
+
+
+Post-completion compatibility-contract correction (2026-09-16):
+- Legacy source re-inspection confirmed Blissz author media uses `tbm_profile_picture`, while Techgenyz uses `profile_picture`.
+- `COMPATIBILITY-CONTRACT.md`, `MIGRATION-MAP.md` and the durable media policy were corrected; both keys and referenced attachment IDs are protected persistent identifiers.
+- No user meta or attachment data was migrated or rewritten, and the current `AuthorData` runtime remains unchanged at 0.0.7.
+- The Blissz compatibility adapter, including evidence-based read precedence and write behavior, remains reserved for Development 0.0.8.

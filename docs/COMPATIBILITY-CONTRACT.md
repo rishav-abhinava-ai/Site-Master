@@ -25,12 +25,16 @@ Site Master must preserve existing records, IDs, URLs, settings, saved templates
 
 ## Protected Blissz identifiers
 
-- User meta `profile_picture` and referenced media.
+- Author media: user meta `tbm_profile_picture` and its referenced attachment IDs.
 - AJAX `tbm_get_local_post_date` while templates depend on it.
 - Widgets `tbm_breadcrumb`, `tbm-date-widget`, `tbm-post-author-widget`, `tbm-post-content`, `tbm_post_search`, `tbz_loop_post_block`, `blissz_loop_category_block`, `tbz_loop_single_post_block`.
 - Every saved Elementor control key for query, layout, headings, images, author/date, excerpt, category and styling.
 - Category metadata used by loop modules; Elementor template IDs/types; `rank_math_primary_category`; `_yoast_wpseo_primary_category` fallback.
 - Visible breadcrumb, author/date, related-content, card and search behavior, except prohibited schema/microdata.
+
+## Distinct legacy author-media identifiers
+
+`profile_picture` (Techgenyz) and `tbm_profile_picture` (Blissz) are distinct protected persisted identifiers. Neither key nor its referenced attachment IDs may be destructively renamed, deleted, copied in bulk or rewritten merely to unify Site Master internals. Compatibility must follow `legacy persisted identifier -> compatibility adapter/service -> Site Master`. Development `0.0.8` must inspect representative sanitized Blissz fixtures before deciding read precedence or future write/synchronization behavior.
 
 ## WordPress, SEO and lifecycle guarantees
 

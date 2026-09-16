@@ -61,16 +61,33 @@ $model = PostCardViewModel::from_post( 1, 5 ); sm_expect( $model instanceof Post
 
 $renderer = new PostCardRenderer(); $home = $renderer->render( $model, array( 'context' => 'homepage', 'show_excerpt' => true, 'show_avatar' => true ) );
 sm_expect( str_starts_with( $home, '<article class="sm-post-card">' ), 'Card root is not article.' ); sm_expect( str_contains( $home, '<h3 class="sm-post-card__title"><a href=' ), 'Homepage heading is not H3 with a link.' ); sm_expect( str_contains( $home, 'rel="author"' ) && str_contains( $home, '<time ' ), 'Author/date semantics missing.' ); sm_expect( str_contains( $home, 'width="640"') && str_contains( $home, 'srcset=') && ! str_contains( $home, '<figure'), 'Normal responsive image semantics failed.' ); sm_expect( ! preg_match( '/itemscope|itemtype|itemprop|application\/ld\+json/i', $home ), 'Schema or microdata emitted.' );
+sm_expect( str_contains( $home, '<a class="sm-post-card__media" href="https://example.test/story/1/" aria-label="Safe title"><img' ), 'Empty-alt linked media lacks its headline fallback label.' );
+sm_expect( str_contains( $home, 'alt=""' ), 'Empty attachment alt was replaced instead of preserving media policy.' );
+
+$meaningful_alt = new PostCardViewModel( array( 'permalink' => 'https://example.test/described/', 'title' => 'Described story', 'image_id' => 92, 'image_alt' => 'Phone displayed on a desk' ) );
+$meaningful_html = $renderer->render( $meaningful_alt );
+sm_expect( str_contains( $meaningful_html, 'alt="Phone displayed on a desk"' ), 'Meaningful attachment alt was changed.' );
+sm_expect( ! preg_match( '/class="sm-post-card__media"[^>]*aria-label=/i', $meaningful_html ), 'Meaningful-alt media received a duplicate fallback label.' );
+
+$hostile_media = new PostCardViewModel( array( 'permalink' => 'https://example.test/hostile/', 'title' => 'Story " <script>bad</script>', 'image_id' => 93, 'image_alt' => '' ) );
+$hostile_media_html = $renderer->render( $hostile_media );
+sm_expect( str_contains( $hostile_media_html, 'aria-label="Story &quot; &lt;script&gt;bad&lt;/script&gt;"' ), 'Media-link fallback label was not attribute escaped.' );
+sm_expect( ! str_contains( $hostile_media_html, 'aria-label="Story " <script>' ), 'Hostile headline broke the media anchor attribute.' );
+
+$markup_only_alt = new PostCardViewModel( array( 'permalink' => 'https://example.test/markup-alt/', 'title' => 'Markup alt story', 'image_id' => 94, 'image_alt' => '<span></span>' ) );
+$markup_only_alt_html = $renderer->render( $markup_only_alt );
+sm_expect( str_contains( $markup_only_alt_html, 'alt=""' ) && str_contains( $markup_only_alt_html, 'aria-label="Markup alt story"' ), 'Alt sanitization and link fallback became inconsistent.' );
 
 $archive = $renderer->render( $model, array( 'context' => 'archive', 'heading_level' => 'h1', 'show_caption' => true, 'show_excerpt' => false, 'show_author' => false, 'date_type' => 'modified', 'classes' => array( 'layout-grid', 'bad" onclick="x' ) ) );
 sm_expect( str_contains( $archive, '<h2 class="sm-post-card__title">' ) && ! str_contains( $archive, '<h1'), 'Unsafe heading was not rejected.' ); sm_expect( str_contains( $archive, '<figure') && str_contains( $archive, '<figcaption>Photo &lt;credit&gt;</figcaption>'), 'Caption figure behavior failed.' ); sm_expect( ! str_contains( $archive, 'rel="author"') && ! str_contains( $archive, 'sm-post-card__excerpt'), 'Disabled elements rendered.' ); sm_expect( ! str_contains( $archive, 'onclick=') && ! str_contains( $archive, '<bad>'), 'Untrusted output was not escaped.' );
+sm_expect( preg_match( '/<figure[^>]*>\s*<a class="sm-post-card__media"[^>]*aria-label="Safe title"[^>]*>\s*<img[^>]*alt=""/i', $archive ) === 1, 'Caption figure did not preserve the empty-alt link fallback.' );
 sm_expect( strpos( $archive, '</figure>' ) < strpos( $archive, 'sm-post-card__category' ), 'Category was placed inside the figure.' ); sm_expect( str_contains( $archive, 'September 15, 2026' ), 'Explicit modified date was not rendered.' );
 
 $hostile = new PostCardViewModel( array( 'permalink' => 'https://example.test/unsafe/', 'title' => '<script>alert(1)</script>', 'excerpt' => '<img src=x onerror=alert(1)>', 'category' => array( 'name' => '<b>Category</b>', 'url' => 'https://example.test/category/' ), 'author' => array( 'id' => 7, 'display_name' => '<i>Author</i>', 'url' => 'https://example.test/author/' ) ) );
 $escaped = $renderer->render( $hostile, array( 'show_excerpt' => true, 'show_date' => false ) );
 sm_expect( ! str_contains( $escaped, '<script>') && ! str_contains( $escaped, '<img src=x') && ! str_contains( $escaped, '<b>') && ! str_contains( $escaped, '<i>'), 'Hostile visible values were not escaped.' );
 
-$GLOBALS['sm_image'] = false; $no_image = $renderer->render( $model ); sm_expect( ! str_contains( $no_image, 'sm-post-card__media') && ! str_contains( $no_image, '<figure'), 'Empty media wrapper rendered.' ); $GLOBALS['sm_image'] = true;
+$GLOBALS['sm_image'] = false; $no_image = $renderer->render( $model ); sm_expect( ! str_contains( $no_image, 'sm-post-card__media') && ! str_contains( $no_image, '<figure') && ! str_contains( $no_image, 'aria-label='), 'Missing image emitted media markup or an empty label.' ); $GLOBALS['sm_image'] = true;
 $GLOBALS['sm_meta'][1]['rank_math_primary_category'] = 999; $GLOBALS['sm_meta'][1]['_yoast_wpseo_primary_category'] = 10; sm_expect( 10 === PostData::primary_category( 1 )['id'], 'Yoast category fallback failed.' ); $GLOBALS['sm_meta'][1] = array(); sm_expect( 10 === PostData::primary_category( 1 )['id'], 'WordPress category fallback failed.' ); $GLOBALS['sm_terms'][1] = array(); sm_expect( null === PostData::primary_category( 1 ), 'No-category state failed.' );
 $generated = new WP_Post( 2 ); $generated->post_content = 'One two three four five six [gallery]'; $GLOBALS['sm_posts'][2] = $generated; sm_expect( 'One two three…' === PostData::excerpt( 2, 3 ), 'Generated excerpt failed.' );
 

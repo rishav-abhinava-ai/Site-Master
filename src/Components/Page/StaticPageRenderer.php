@@ -27,8 +27,8 @@ final class StaticPageRenderer {
 
 		$content = '<header class="sm-page-header"><h1>' . esc_html( (string) $data['title'] ) . '</h1></header>';
 		if ( ! empty( $options['show_image'] ) && (int) $data['image_id'] > 0 ) {
-			$image_size = sanitize_key( (string) ( $options['image_size'] ?? 'full' ) );
-			$image = ImageRenderer::hero( (int) $data['image_id'], '' !== $image_size ? $image_size : 'full', array( 'alt' => (string) $data['image_alt'], 'sizes' => '100vw' ) );
+			$image_size = ImageRenderer::size( $options['image_size'] ?? 'full' );
+			$image = ImageRenderer::hero( (int) $data['image_id'], $image_size, array( 'context' => 'static-page-featured', 'alt' => (string) $data['image_alt'], 'sizes' => is_string( $options['image_sizes'] ?? null ) ? $options['image_sizes'] : '100vw', 'loading' => $options['image_loading'] ?? 'auto', 'fetchpriority' => $options['image_priority'] ?? 'auto' ) );
 			if ( '' !== $image ) {
 				$caption = ! empty( $options['show_caption'] ) && '' !== trim( (string) $data['image_caption'] ) ? '<figcaption>' . esc_html( (string) $data['image_caption'] ) . '</figcaption>' : '';
 				$content .= '<figure class="sm-page-hero">' . $image . $caption . '</figure>';

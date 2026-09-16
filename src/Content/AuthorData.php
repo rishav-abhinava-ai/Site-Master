@@ -100,15 +100,14 @@ final class AuthorData {
 		}
 
 		$classes = array_merge( array( 'avatar', 'avatar-' . absint( $size ), 'photo' ), (array) ( $args['class'] ?? array() ) );
-		$html = wp_get_attachment_image(
+		$html = \Abhinava\SiteMaster\Media\ImageRenderer::attachment(
 			$id,
 			array( absint( $size ), absint( $size ) ),
-			false,
 			array(
+				'context' => 'avatar',
 				'class'    => implode( ' ', array_map( 'sanitize_html_class', array_unique( $classes ) ) ),
 				'alt'      => $alt,
-				'loading'  => $args['loading'] ?? 'lazy',
-				'decoding' => $args['decoding'] ?? 'async',
+				'loading'  => $args['loading'] ?? 'auto',
 			)
 		);
 

@@ -55,7 +55,9 @@ final class SingleArticleRenderer {
 			'show_image'     => ! array_key_exists( 'show_image', $options ) || (bool) $options['show_image'],
 			'show_caption'   => ! array_key_exists( 'show_caption', $options ) || (bool) $options['show_caption'],
 			'show_topics'    => ! array_key_exists( 'show_topics', $options ) || (bool) $options['show_topics'],
-			'image_size'     => is_string( $options['image_size'] ?? null ) && '' !== $options['image_size'] ? sanitize_key( $options['image_size'] ) : 'full',
+			'image_size'     => \Abhinava\SiteMaster\Media\ImageRenderer::size( $options['image_size'] ?? 'full' ),
+			'image_loading' => $options['image_loading'] ?? 'eager',
+			'image_priority' => $options['image_priority'] ?? 'auto',
 			'image_sizes'    => is_string( $options['image_sizes'] ?? null ) ? sanitize_text_field( $options['image_sizes'] ) : '100vw',
 			'classes'        => array_values( array_unique( $classes ) ),
 		);

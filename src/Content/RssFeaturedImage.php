@@ -27,7 +27,7 @@ final class RssFeaturedImage {
 			return $content;
 		}
 
-		$image = wp_get_attachment_image( $image_id, 'full', false, array( 'alt' => '' ) );
+		$image = \Abhinava\SiteMaster\Media\ImageRenderer::attachment( $image_id, 'full', array( 'context' => 'rss', 'alt' => '' ) );
 		return '' !== $image ? '<p class="sm-feed-featured-image">' . $image . '</p>' . $content : $content;
 	}
 }

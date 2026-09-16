@@ -34,7 +34,7 @@ final class PostCardViewModel {
 				'permalink'      => get_permalink( $post_id ),
 				'title'          => get_the_title( $post_id ),
 				'image_id'       => $image_id,
-				'image_alt'      => is_string( $alt ) && '' !== trim( $alt ) ? $alt : get_the_title( $post_id ),
+				'image_alt'      => is_string( $alt ) ? $alt : '',
 				'image_caption'  => is_string( $caption ) ? $caption : '',
 				'category'       => PostData::primary_category( $post_id ),
 				'excerpt'        => PostData::excerpt( $post_id, $excerpt_length ),

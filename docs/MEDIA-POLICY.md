@@ -1,0 +1,15 @@
+# Shared media policy — Development 0.0.7
+
+ImageRenderer is the single attachment-image boundary. It delegates URLs, intrinsic width/height, responsive srcset, default sizes, attachment alt and decoding to WordPress. It never fetches remote images, converts formats, creates a proxy, adds JavaScript, or changes global media filters.
+
+Contexts: card, hero, content, avatar, static-page-featured, rss, generic. Card defaults to lazy; hero defaults to eager; other contexts leave loading to core. Semantic context does not establish viewport position. Loading options are auto/eager/lazy; fetchpriority options are auto/high/low. Auto leaves core optimization in charge. Explicit high forces eager even when lazy was requested. Avatars never receive high priority; RSS omits loading and fetchpriority hints. Layout callers must designate at most one explicit high-priority candidate per page. Core/third-party filters can still affect final output.
+
+Only context, loading, fetchpriority, alt, sizes and class are accepted; unknown attributes are ignored. Classes are token-sanitized and text options sanitized before WordPress contextual escaping. Image sizes must be registered names (including full) or two positive integers up to 8192; invalid sizes fall back to medium_large. Known intrinsic dimensions and srcset cannot be overridden by options.
+
+Post Card and SingleArticle consumers expose image_loading/image_priority/image_sizes/image_size. StaticPage exposes the same options; its featured image leaves loading to core by default. Existing card sizes assume a three-column layout; existing hero/page sizes assume full width. These are presentation defaults, not knowledge of Elementor breakpoints; consumers must override them for narrower layouts. Dimension arrays are accepted. Generic images defer sizes to WordPress.
+
+Attachment alt metadata is preserved, including empty alt. Missing card/hero alt no longer falls back to the post title. Stored metadata is not rewritten. Authors preserve caller alt and WordPress fallback, use bounded display dimensions and default loading to core. Feeds preserve duplicate prevention and decorative alt. Normal cards keep linked thumbnails without figure; captions opt into figure. Article heroes remain unlinked figures; no empty captions/wrappers are added.
+
+No custom preload is implemented because reliable layout/responsive-request evidence is unavailable. This is a static media architecture improvement; no measured LCP, CLS or PageSpeed claim is made.
+
+Legacy source inspection confirmed distinct author-media keys: Blissz uses `tbm_profile_picture` and Techgenyz uses `profile_picture`. Both are protected persistent identifiers, including their referenced attachment IDs. Site Master does not destructively rename either key. Current `AuthorData` runtime remains on `profile_picture`; Development `0.0.8` must implement Blissz compatibility through an adapter after sanitized fixture inspection, without assuming read precedence or future write/synchronization behavior.

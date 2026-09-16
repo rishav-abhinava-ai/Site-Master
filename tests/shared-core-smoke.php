@@ -73,6 +73,7 @@ require_once dirname( __DIR__ ) . '/src/SEO/RankMathBridge.php';
 require_once dirname( __DIR__ ) . '/src/Components/Breadcrumbs/BreadcrumbRenderer.php';
 require_once dirname( __DIR__ ) . '/src/Security/SvgSanitizer.php';
 require_once dirname( __DIR__ ) . '/src/Content/AuthorData.php';
+require_once dirname( __DIR__ ) . '/src/Media/ImageRenderer.php';
 require_once dirname( __DIR__ ) . '/src/Support/DateFormatter.php';
 require_once dirname( __DIR__ ) . '/src/Content/RssFeaturedImage.php';
 

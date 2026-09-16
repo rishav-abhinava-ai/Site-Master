@@ -48,3 +48,5 @@ and pagination reuse, empty states, and sibling article/sidebar semantics.
 Automated QA infrastructure is introduced in a later authorized development phase.
 
 Do not treat the absence of the future test suite in Development 0.0.1 as permission to skip validation.
+
+Run Development 0.0.7 media/static performance coverage with `php tests/media-cwv-smoke.php`. This suite uses controlled WordPress stubs and DOM assertions; it does not measure browser CWV or prove live WordPress output.

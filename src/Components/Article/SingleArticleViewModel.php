@@ -41,7 +41,7 @@ final class SingleArticleViewModel {
 				'published_date' => DateFormatter::published( $post_id ),
 				'modified_date'  => DateFormatter::meaningfully_modified( $post_id ) ? DateFormatter::modified( $post_id ) : null,
 				'image_id'       => $image_id,
-				'image_alt'      => is_string( $alt ) && '' !== trim( $alt ) ? $alt : get_the_title( $post_id ),
+				'image_alt'      => is_string( $alt ) ? $alt : '',
 				'image_caption'  => is_string( $caption ) ? $caption : '',
 				'content'        => (string) $post->post_content,
 				'topics'         => $topics,

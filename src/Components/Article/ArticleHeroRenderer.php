@@ -20,6 +20,8 @@ final class ArticleHeroRenderer {
 			array(
 				'alt'   => (string) $data['image_alt'],
 				'sizes' => $options['image_sizes'],
+				'loading' => $options['image_loading'] ?? 'eager',
+				'fetchpriority' => $options['image_priority'] ?? 'auto',
 			)
 		);
 		if ( '' === $image ) {

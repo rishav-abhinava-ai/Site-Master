@@ -8,7 +8,8 @@ Classification vocabulary: **SHARED CORE**, **TECHGENYZ PROFILE**, **BLISSZ PROF
 | Legacy plugin | Source | Feature / persistent identifiers | Target | Classification | Migration and validation | Phase |
 |---|---|---|---|---|---|---|
 | Both | bootstrap, `core/core.php` | Feature loading; legacy basenames and `tbm_*`/`tgm_*` hooks | `src/Core/`, `src/Profiles/` | SHARED CORE | Profile-aware bootstrap; activation and both-profile smoke tests | 0.0.2 |
-| Both | `core/user-avatar.php` | Custom avatar; user meta `profile_picture` | `Content/AuthorData` | SHARED CORE + LEGACY COMPATIBILITY | Read existing attachment IDs; test nonce, capability, deletion and fallback | 0.0.3 |
+| Techgenyz | `core/user-avatar.php` | Custom avatar; user meta `profile_picture` | `Content/AuthorData` | SHARED CORE + LEGACY COMPATIBILITY | Preserve existing attachment IDs; shared `profile_picture` service was implemented in 0.0.3; test nonce, capability, deletion and fallback | 0.0.3 |
+| Blissz | `core/user-avatar.php` | Custom avatar; user meta `tbm_profile_picture` | `Content/AuthorData` / Blissz compatibility adapter | SHARED CORE + BLISSZ LEGACY COMPATIBILITY | Preserve existing attachment IDs; add a non-destructive adapter after sanitized fixture inspection; do not imply 0.0.3 compatibility | 0.0.8 |
 | Both | local-date code/widgets | AJAX `tbm_get_local_post_date`, `tgm_get_local_post_date`; widget IDs | `Support/DateFormatter` | SHARED CORE + LEGACY COMPATIBILITY | One formatter/script; retain adapters; avoid AJAX fan-out | 0.0.3 |
 | Both | `core/rss.php` | Feed featured image filters | content/media | SHARED CORE | Preserve after duplicate-output/feed regression | 0.0.3 |
 | Both | `core/rankmath.php` | Forced SearchAction; disabled sitemap cache | `SEO/RankMathBridge` | REQUIRES DECISION / DO NOT MIGRATE by default | Rank Math remains sole owner; require sitemap/schema evidence | 0.0.3, 0.1.2 |
@@ -30,6 +31,10 @@ Classification vocabulary: **SHARED CORE**, **TECHGENYZ PROFILE**, **BLISSZ PROF
 | Techgenyz | attachment/IP/comments/taxonomy-label | Redirect/access/presentation hooks | profile services | REQUIRES DECISION | Confirm business/URL effects first | 0.0.9, 0.1.3 |
 | Techgenyz 1.0.5 ZIP | `.git` directory | Repository metadata | none | DO NOT MIGRATE | Exclude and scan package | 0.1.7 |
 | Techgenyz 1.0.2 | whole plugin | Historical behavior; lacks 1.0.5 post-view file/hardening | none | DO NOT MIGRATE | Compare only; never bootstrap/package | all migration phases |
+
+## Development 0.0.8 author-media requirement
+
+The Blissz migration must recognize existing `tbm_profile_picture` values, preserve their referenced attachment IDs, reuse the shared AuthorData/avatar presentation path, retain WordPress avatar fallback and avoid destructive user-meta migration. `tbm_profile_picture` and `profile_picture` remain separate persisted histories. Read precedence and future edit/write or synchronization behavior are deliberately undecided until representative sanitized Blissz production fixtures are inspected.
 
 ## Scaffold conclusion
 

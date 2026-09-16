@@ -19,17 +19,23 @@ final class PostCardRenderer {
 
 		$parts = array();
 		if ( $options['show_image'] && $data['image_id'] > 0 ) {
+			$image_alt = sanitize_text_field( (string) $data['image_alt'] );
 			$image = ImageRenderer::attachment(
 				$data['image_id'],
 				$options['image_size'],
 				array(
-					'alt'     => $data['image_alt'],
-					'loading' => 'lazy',
+					'alt'     => $image_alt,
+					'context' => 'card',
+					'loading' => $options['image_loading'],
+					'fetchpriority' => $options['image_priority'],
 					'sizes'   => $options['image_sizes'],
 				)
 			);
 			if ( '' !== $image ) {
-				$media = '<a class="sm-post-card__media" href="' . esc_url( $data['permalink'] ) . '">' . $image . '</a>';
+				$media_label = '' === trim( $image_alt )
+					? ' aria-label="' . esc_attr( (string) $data['title'] ) . '"'
+					: '';
+				$media = '<a class="sm-post-card__media" href="' . esc_url( $data['permalink'] ) . '"' . $media_label . '>' . $image . '</a>';
 				if ( $options['show_caption'] && '' !== trim( $data['image_caption'] ) ) {
 					$media = '<figure class="sm-post-card__figure">' . $media . '<figcaption>' . esc_html( $data['image_caption'] ) . '</figcaption></figure>';
 				}
@@ -104,7 +110,9 @@ final class PostCardRenderer {
 			'show_avatar'   => ! empty( $options['show_avatar'] ),
 			'date_type'     => 'modified' === ( $options['date_type'] ?? '' ) ? 'modified' : 'published',
 			'heading_level' => $heading,
-			'image_size'    => is_string( $options['image_size'] ?? null ) && '' !== $options['image_size'] ? sanitize_key( $options['image_size'] ) : 'medium_large',
+			'image_size'    => ImageRenderer::size( $options['image_size'] ?? 'medium_large' ),
+			'image_loading' => $options['image_loading'] ?? 'lazy',
+			'image_priority' => $options['image_priority'] ?? 'auto',
 			'image_sizes'   => is_string( $options['image_sizes'] ?? null ) ? sanitize_text_field( $options['image_sizes'] ) : '(max-width: 768px) 100vw, 33vw',
 			'classes'       => array_values( array_unique( $classes ) ),
 		);
