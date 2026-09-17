@@ -4,7 +4,7 @@ Site Master is the shared WordPress plugin being developed for **Techgenyz** and
 
 ## Current development version
 
-`0.0.9`
+`0.1.0`
 
 The authoritative value is `SITE_MASTER_DEVELOPMENT_VERSION` in `site-master.php`.
 
@@ -44,4 +44,4 @@ See `docs/PROJECT_OVERVIEW.md`.
 
 ## Content Analytics
 
-`modules/analytics/` is reserved for privacy-conscious first-party editorial analytics. Its runtime is planned for Development `0.1.0`; no tracking runtime is included in the current plugin.
+`src/Analytics/` implements privacy-conscious first-party editorial analytics: conditional beacon collection, append-only events, scheduled aggregation, immutable Techgenyz baseline preservation, aggregate reports and protected export. See `docs/CONTENT-ANALYTICS-ARCHITECTURE.md`.

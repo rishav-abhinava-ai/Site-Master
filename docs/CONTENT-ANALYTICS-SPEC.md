@@ -1,6 +1,6 @@
 # Site Master Content Analytics Specification
 
-Status: approved architecture; runtime reserved for Development `0.1.0`. This document is not version authority.
+Status: implemented in Development `0.1.0`; see `CONTENT-ANALYTICS-ARCHITECTURE.md` for the durable runtime contract. This document is not version authority.
 
 ## Purpose and profiles
 

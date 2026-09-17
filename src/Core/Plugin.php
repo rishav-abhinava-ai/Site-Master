@@ -8,6 +8,7 @@
 namespace Abhinava\SiteMaster\Core;
 
 use Abhinava\SiteMaster\Admin\StatusPage;
+use Abhinava\SiteMaster\Analytics\AnalyticsModule;
 use Abhinava\SiteMaster\Content\AuthorData;
 use Abhinava\SiteMaster\Content\RssFeaturedImage;
 use Abhinava\SiteMaster\Elementor\ElementorIntegration;
@@ -56,6 +57,7 @@ final class Plugin {
 		( new RankMathBridge() )->register();
 		( new RssFeaturedImage() )->register();
 		( new ElementorIntegration( $profile ) )->register();
+		( new AnalyticsModule( $profile ) )->register();
 
 		if ( is_admin() ) {
 			( new StatusPage( $profile ) )->register();

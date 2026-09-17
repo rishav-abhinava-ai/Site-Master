@@ -25,7 +25,7 @@ Build one shared production-grade WordPress plugin for Techgenyz and The Blissz.
 
 ## Site Master Analytics / Content Analytics
 
-Content Analytics is a shared first-party editorial analytics capability with dedicated analytics storage. It will preserve Techgenyz legacy lifetime post-view totals while replacing per-view postmeta updates. The Blissz can use the shared module later, but tracking is disabled by default and must be explicitly enabled. The architecture minimizes personal data and is specified in `CONTENT-ANALYTICS-SPEC.md`; runtime implementation is reserved for Development `0.1.0`.
+Content Analytics is a shared first-party editorial analytics capability with dedicated, profile-partitioned storage. Development 0.1.0 replaces Techgenyz per-view postmeta writes with a tiny beacon, append-only ingestion and scheduled aggregation while preserving `post_views_count` once as an immutable baseline. Blissz tracking remains disabled by default and unconfigured sites cannot track. See `CONTENT-ANALYTICS-SPEC.md` and `CONTENT-ANALYTICS-ARCHITECTURE.md`.
 
 ## Version model
 

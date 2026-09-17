@@ -7,6 +7,8 @@
 
 namespace Abhinava\SiteMaster\Core;
 
+use Abhinava\SiteMaster\Analytics\AnalyticsModule;
+
 defined( 'ABSPATH' ) || exit;
 
 final class Lifecycle {
@@ -17,11 +19,13 @@ final class Lifecycle {
 		 * Do not overwrite existing stored Site Master or legacy plugin data.
 		 * Destructive migrations are forbidden here.
 		 */
+		AnalyticsModule::activate();
 	}
 
 	public static function deactivate(): void {
 		/*
 		 * Deactivation is intentionally non-destructive.
 		 */
+		AnalyticsModule::deactivate();
 	}
 }

@@ -3,6 +3,7 @@
 
 namespace Abhinava\SiteMaster\Core;
 
+use Abhinava\SiteMaster\Analytics\Config;
 use Abhinava\SiteMaster\Profiles\ProfileInterface;
 
 defined( 'ABSPATH' ) || exit;
@@ -16,11 +17,13 @@ final class ModuleRegistry {
 
 		foreach ( $declared as $module ) {
 			$supported = true === ( $profile_modules[ $module ] ?? false );
+			$analytics_loaded = class_exists( Config::class );
+			$enabled = 'analytics' === $module && $supported && $analytics_loaded && Config::enabled( $profile->key() );
 			$status[ $module ] = array(
 				'supported' => $supported,
 				'available' => $supported,
-				'enabled'   => false,
-				'state'     => $supported ? 'reserved' : 'unavailable',
+				'enabled'   => $enabled,
+				'state'     => $enabled ? 'enabled' : ( $supported ? ( 'analytics' === $module && $analytics_loaded ? 'disabled' : 'reserved' ) : 'unavailable' ),
 			);
 		}
 

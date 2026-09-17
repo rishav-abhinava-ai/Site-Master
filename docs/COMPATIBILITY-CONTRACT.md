@@ -57,6 +57,6 @@ Before relevant implementation, capture sanitized fixtures for Blissz loop/singl
 
 ## Content Analytics / Legacy Post Views
 
-Existing Techgenyz lifetime view totals are protected. Development 0.1.0 must re-inspect the source and verify the exact authoritative meta key or keys before migration. The `tgm_count_post_view` action and visible count behavior remain compatible while consumers depend on them.
+Existing Techgenyz lifetime totals in the source-verified `post_views_count` postmeta key are protected. Techgenyz Master 1.0.5 `core/post-views.php` defines this key and both logged-in/logged-out `tgm_count_post_view` actions; 1.0.2 contains no editorial post-view counter or fallback key. The 0.1.0 adapter preserves `nonce`, `post_id`, the WordPress JSON envelope, and `counted`/`views` fields while routing eligible requests through append-only ingestion.
 
-No total may reset to zero. Import the genuine legacy lifetime value once as an immutable, auditable cutover baseline; baseline plus new accepted views equals displayed lifetime. Never fabricate historical time series, unique readers, referrers, devices, countries or campaigns. Migration must be idempotent, must not import the baseline twice, and must prevent the legacy and new collectors from double counting.
+No total may reset to zero. Site Master imports the genuine legacy lifetime value once as an immutable, auditable Techgenyz cutover baseline; baseline plus new accepted views equals displayed lifetime. It never writes back to `post_views_count`. Beacon and adapter share the one-minute dedupe hash. No historical time series, unique readers, referrers, devices, countries or campaigns are fabricated.

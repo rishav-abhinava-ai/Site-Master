@@ -1,6 +1,6 @@
 # CODEX_HANDOFF.md â€” Site Master Implementation Context
 
-Last updated: 2026-09-15
+Last updated: 2026-09-17
 
 ## Version Authority Notice
 
@@ -1152,7 +1152,7 @@ The following are currently considered locked unless explicitly changed:
 20. Production packaging never modifies the working development source merely to assign a production release version.
 
 
-## Development Version 0.0.7 — Media / Image Rendering / Core Web Vitals
+## Development Version 0.0.7 ï¿½ Media / Image Rendering / Core Web Vitals
 
 Date: 2026-09-15
 
@@ -1191,7 +1191,7 @@ Known Limitations / Follow-up:
 - Live WordPress, both-profile browser DOM/network output, Lighthouse/CWV measurement and runtime log correlation NOT RUN: available PHP has no mysqli/pdo_mysql and renderers are not yet connected to site layouts. No performance scores claimed.
 - No PHPCS/PHPStan/PHPUnit configuration; dedicated suites supply static coverage.
 - Confirm Blissz tbm_profile_picture and saved Elementor fixtures during Phase 0.0.8. Existing compatibility/source-audit documents were not rewritten.
-- Next phase is 0.0.8 — The Blissz Migration; not started.
+- Next phase is 0.0.8 ï¿½ The Blissz Migration; not started.
 
 
 Post-completion verification correction (2026-09-16):
@@ -1311,3 +1311,53 @@ Post-completion Elementor control fidelity correction (2026-09-17):
 - Related-post, alternate-template and advertisement saved structures remain editor-representable but have no frontend behavior or CSS. Static fixture tests preserve repeater row keys, subcontrol keys, representative source defaults and ordering.
 - All existing suites, the expanded Techgenyz fidelity assertions, whole-tree PHP lint and executable hygiene passed. Live Elementor, real `_elementor_data`, live edit/save round-trip and live CSS regeneration remain NOT RUN.
 - Versions remain 0.0.9, channel remains development, production ledger remains NONE, and 0.1.0 was not started.
+
+## Development Version 0.1.0 â€” Site Master Content Analytics
+
+Date: 2026-09-17
+
+Purpose: Replace Techgenyz's per-view postmeta counter with shared, privacy-conscious first-party editorial analytics while preserving genuine lifetime totals and profile isolation.
+
+Implemented:
+- Added conditional first-party beacon collection at `site-master/v1/analytics/collect`, a cache-safe post/profile HMAC, a 2 KiB payload cap, allowlisted acquisition fields, origin validation, staff/bot exclusion and silent frontend failure.
+- Added schema-versioned tables for append-only events, hourly/daily/dimension aggregates, cumulative post totals, immutable legacy baselines and durable state.
+- Added binary daily rotating reader estimates and one-minute keyed dedupe hashes without persisting raw IP, complete User-Agent, cookie ID, full referrer or permanent visitor identity.
+- Added a five-minute advisory-locked, transaction/cursor-safe, 500-event worker, past-day distinct-reader finalization and bounded raw retention/pruning.
+- Added Techgenyz-only idempotent baseline import from verified `post_views_count`, explicit UTC cutover state and a `tgm_count_post_view` adapter sharing beacon dedupe without legacy postmeta mutation.
+- Added bounded reporting services, Overview/Content/Realtime/Authors/Taxonomies/Acquisition/Settings tabs, per-post analytics, profile settings and protected aggregate CSV.
+
+Architecture / Decisions:
+- Techgenyz defaults enabled; Blissz defaults disabled but opt-in; unconfigured profiles cannot enable or collect. Every stored row is profile-partitioned.
+- Lifetime equals immutable baseline plus measured cumulative views. Historical granular data is never invented. Trending excludes lifetime and uses recent-to-previous velocity weighted by recent-day volume.
+- Events/hour buckets use UTC; reporting days and administrator ranges use the WordPress timezone. Country remains `ZZ` unless a trusted server header is explicitly configured.
+- Rank Math remains exclusive SEO/schema owner. Product, company, comparison, deal, Firebase and legacy REST work were not started.
+
+Compatibility Preserved:
+- Techgenyz Master 1.0.5 `core/post-views.php` was re-inspected: `post_views_count` is the lifetime key; AJAX requires `nonce` and `post_id`, registers logged-in and logged-out actions, and returns WordPress JSON envelopes with `counted`/`views` or an invalid-post error. Version 1.0.2 contains no editorial counter or fallback key.
+- Existing postmeta remains untouched. Posts, terms, users, URLs, Elementor data and Rank Math metadata are not modified. Existing 0.0.8/0.0.9 behavior remains regression-tested.
+
+Files / Modules Materially Affected:
+- `src/Analytics/*`, `assets/js/content-analytics.min.js`, Core bootstrap/lifecycle/module status, `tests/content-analytics-smoke.php` and scaffold assertions.
+- Analytics architecture/spec, project overview, migration map, compatibility contract, README and this handoff.
+
+Validation:
+- All PHP files linted with zero failures. Scaffold, shared-core, Post Card/listing, single-article, page/accessibility, media/CWV, Blissz, Techgenyz and Content Analytics suites passed.
+- Analytics assertions cover profile defaults, exact baseline key/normalization, hash rotation, privacy normalization, comparison/trending helpers, browser-storage prohibition, append-only/no-remote-call hygiene, bounded SQL, transaction/lock/cursor structure, legacy actions and REST payload gates.
+- Executable hygiene found no analytics `update_post_meta`, blocking remote request, cookie/browser storage, schema output or product/deal/Firebase/legacy-REST coupling. SQL uses controlled identifiers, prepared values and bounded raw/report queries. `git diff --check` passed with line-ending notices only.
+
+Known Limitations / Follow-up:
+- Local's PHP/MySQL runtime created and verified all seven prefixed schema-version-1 tables. Two repeat `dbDelta()` installs completed ready with no database error, after the live check identified and corrected compact primary-key syntax. The Local profile is currently unconfigured, so no baseline import or event ingestion was attempted. LIVE WORDPRESS UI, real ingestion/aggregation, runtime logs, LIVE BEACON BROWSER TEST, CACHE TEST and DEVTOOLS NETWORK TEST were NOT RUN. These remain mandatory UAT items. The Local PHP configuration also emitted a pre-existing missing `php_imagick.dll` startup warning.
+- Bot detection and readers are estimates; trusted country accuracy depends on edge configuration; WP-Cron latency controls freshness. V1 omits visitor journeys, remote enrichment and product/deal analytics.
+- Production ledger remains NONE. No production ZIP or Git mutation was performed. Next authorized phase is 0.1.1 and has not been started.
+
+Post-completion referrer-attribution correction (2026-09-17):
+- `Privacy::referrer_domain()` now accepts the beacon's privacy-preserving hostname-only value as well as an HTTP/HTTPS URL, while rejecting empty, malformed, credential-like/path/query/fragment-bearing hostname input and retaining only a validated, bounded lowercase host without the `www.` prefix.
+- The frontend beacon remains unchanged and continues sending only `document.referrer`'s hostname. No path, query, fragment, search term or additional reader information is transmitted or persisted.
+- Acquisition aggregation now has an explicit tested boundary: a normalized `google.com` value remains the `referrer` dimension; only an empty normalized value becomes `direct`.
+- Development/plugin versions remain 0.1.0. Whole-tree PHP lint, Content Analytics tests, and all existing Site Master smoke/regression suites passed; no commit or push was performed.
+
+Post-completion Blocker 2 correction (2026-09-17 â€” daily reader boundary):
+- Collector calculates the WordPress-timezone `report_day` once and supplies that exact value to both event persistence and reader-hash derivation. Estimated-reader identity now rotates on the stored reporting-day boundary rather than UTC midnight.
+- Event timestamps and hourly aggregation buckets remain UTC. Past-day finalization continues using `COUNT(DISTINCT reader_hash)` constrained to the stored `report_day`.
+- The 60-second beacon/legacy dedupe derivation remains byte-compatible with 0.1.0: its UTC daily key, epoch bucket, profile, post ID and transient identity inputs are unchanged. Legacy AJAX continues through Collector with no separate hashing path.
+- No schema change, stored-row rewrite or data migration was required. Development/plugin versions remain 0.1.0 and Development 0.1.1 was not started.
