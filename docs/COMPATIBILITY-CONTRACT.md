@@ -23,6 +23,8 @@ Site Master must preserve existing records, IDs, URLs, settings, saved templates
 - Elementor dynamic tags: `tgm-meta`, `tgm-deal-url`.
 - All control keys persisted in `_elementor_data`; exact control fixtures must be captured before replacing each widget.
 
+Development `0.0.9` resolves the five editorial IDs `post_terms`, `tgm-date-widget`, `tgm-post-author-widget`, `tgm-post-content`, and `tgm_post_search` only under the Techgenyz profile. Their source-derived top-level control registry is runtime-compatible without rewriting `_elementor_data`. Product widgets and dynamic product/deal tags remain protected and deferred.
+
 ## Protected Blissz identifiers
 
 - Author media: user meta `tbm_profile_picture` and its referenced attachment IDs.

@@ -44,3 +44,5 @@ Feature implementation belongs to later authorized development phases.
 Development 0.0.7 hardens the shared attachment-image policy across cards, articles, static pages, custom avatars and RSS. See `MEDIA-POLICY.md` for normalized options, layout responsibilities and validation limits.
 
 Development 0.0.8 adds the profile-gated Blissz Elementor compatibility layer. See `BLISSZ-COMPATIBILITY.md` for the source-derived widget/control inventory, avatar-key precedence, article composition requirement, retired behavior, and validation boundary.
+
+Development 0.0.9 adds the profile-gated Techgenyz editorial publishing compatibility layer. See `TECHGENYZ-PUBLISHING-COMPATIBILITY.md` for its source-derived widget/control inventory, selector translations, author policy, inactive legacy behavior, and deferred live-UAT requirements.

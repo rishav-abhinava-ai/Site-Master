@@ -2,6 +2,8 @@
 
 `blissz-compatibility-smoke.php` verifies the Development 0.0.8 Blissz-only adapter, legacy widget/control resolution, representative rendering, article composition, avatar-key coexistence policy, profile isolation, and prohibited-output boundaries against the source-derived fixture in `tests/fixtures/`.
 
+`techgenyz-publishing-compatibility-smoke.php` verifies the Development 0.0.9 Techgenyz-only editorial adapters, source-derived control registry, responsive/group registration, selector translation, terms/date/author/content/search behavior, cross-profile author policy and prohibited-runtime boundaries.
+
 Run the Development 0.0.2 scaffold checks with:
 
 ```text

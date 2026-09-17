@@ -1258,3 +1258,56 @@ Post-completion verification correction (2026-09-17 — Elementor compatibility)
 - Reconciled durable avatar documentation with runtime policy: Blissz reads `tbm_profile_picture` first, falls back to `profile_picture`, writes/removes only `tbm_profile_picture`, performs no synchronization and never deletes attachments.
 - Static registration/selector behavior is verified with narrow Elementor doubles. Live Elementor CSS regeneration, production `_elementor_data`, browser comparison and runtime log review remain NOT RUN because the local WordPress database was unavailable.
 - Development and plugin versions remain 0.0.8; channel remains development; production ledger remains NONE; no ZIP or Git mutation was performed.
+
+## Development Version 0.0.9 — Techgenyz Shared Publishing Migration
+
+Date: 2026-09-17
+
+Purpose: Resolve the persisted Techgenyz 1.0.5 editorial Elementor widget/control contracts through profile-gated adapters and shared Site Master publishing services without starting product, platform or analytics migrations.
+
+Implemented:
+- Inventoried and registered the five source-confirmed editorial widget IDs: `post_terms`, `tgm-date-widget`, `tgm-post-author-widget`, `tgm-post-content` and `tgm_post_search`.
+- Added a source-derived registry/fixture with 100 direct controls, 39 responsive controls, 21 group controls and 61 selector-bearing style controls. Each direct control has explicit compatibility status and source-definition evidence.
+- Added Techgenyz-only adapters for editorial terms, server-rendered published dates, author display/media, one-pass post content and accessible native search.
+- Translated selector families to current adapter markup and retained normal Elementor wrappers. Responsive and group controls use their corresponding Elementor registration methods.
+- Preserved `profile_picture` as the Techgenyz author-media key without Blissz precedence, synchronization, bulk migration or attachment deletion.
+
+Architecture / Decisions:
+- Techgenyz registration is explicit-profile only; Blissz retains its corrected 0.0.8 runtime; unconfigured sites register neither adapter set.
+- Date output uses `DateFormatter`; the legacy AJAX/inline formatter path and `tgm_get_local_post_date` are not registered.
+- Post content uses `ArticleBodyRenderer` exactly once. Related-template insertion and advertisements are intentionally inactive with saved values retained.
+- Search popup/script modes normalize to a sanitized native GET form with deterministic per-instance IDs.
+- The audited Techgenyz package contains no separate editorial listing-card or single-article Elementor widget in this scope. Existing shared Post Card/listing/single-article suites remain the semantic regression boundary.
+
+Compatibility Preserved:
+- Widget IDs, top-level control IDs, profile_picture attachments, editorial term relationships, posts, users, URLs and saved Elementor data remain unchanged.
+- The corrected Blissz avatar and widget behavior remains regression-tested.
+- Rank Math retains exclusive SEO/schema ownership. No legacy microdata, JSON-LD, metadata override or sitemap hook was migrated.
+- Product, comparison, company, brand, deal, API, Firebase, IP, Amazon, post-view and Content Analytics protections remain intact and runtime-deferred.
+
+Files / Modules Materially Affected:
+- `src/Elementor/Compatibility/Techgenyz/*`, `src/Elementor/ElementorIntegration.php`.
+- `tests/techgenyz-publishing-compatibility-smoke.php`, `tests/fixtures/techgenyz-elementor-controls.json`, Blissz isolation regression, scaffold version assertion and tests README.
+- `docs/TECHGENYZ-PUBLISHING-COMPATIBILITY.md`, compatibility contract, migration map, project overview, README, `site-master.php`, and this handoff.
+
+Validation:
+- PHP 8.2.29 whole-tree lint and all existing/new smoke suites passed before version advancement.
+- Techgenyz compatibility suite verifies exact widget/control IDs, responsive/group methods, translated selectors, terms filtering, server date, author key isolation, one-pass content, unique search IDs, hostile input handling and prohibited schema output.
+- Blissz, media/CWV, page/accessibility, Post Card/listing, scaffold, shared-core and single-article suites passed.
+- Executable hygiene found no schema/microdata, Rank Math override, date AJAX, post-view ingestion, persistent view write, Firebase/API credential, REST route or blocking remote request in the Techgenyz publishing adapters.
+
+Known Limitations / Follow-up:
+- LIVE WORDPRESS / ELEMENTOR: NOT RUN. REAL `_elementor_data`: NOT VERIFIED. LIVE CSS REGENERATION: NOT RUN. BROWSER COMPARISON: NOT RUN. RUNTIME LOGS: NOT RUN.
+- Fixtures are source-derived from Techgenyz Master 1.0.5; no claim of production-template verification is made.
+- CLI DOMDocument availability is an environment concern for later browser/render UAT; current suites use static markup and narrow WordPress/Elementor doubles.
+- Production ledger remains NONE; no production ZIP, commit, push or tag was created.
+- Next authorized phase is 0.1.0 — Site Master Content Analytics; it has not been started.
+
+Post-completion Elementor control fidelity correction (2026-09-17):
+- Rebuilt the Techgenyz control registry from evaluated 1.0.5 Elementor registration methods. Corrected inventory: 178 direct controls, 93 responsive controls and 65 group controls, including dynamically generated post-content definitions missed by literal-call inspection.
+- Captured 43 explicit defaults, 40 option maps, 21 condition definitions, complete selector maps, two inactive repeaters with nine named subcontrols, and definition hashes covering the evaluated Elementor argument arrays.
+- Registration now forwards real defaults, options, conditions, repeater fields and title fields. Explicitly missing defaults remain distinguishable from empty defaults.
+- Enforced status semantics: intentionally inactive and persistence-only controls emit no compatibility selectors. Seven related-post style selectors, two related-post group selectors and five retired search-icon selectors were removed from active registration.
+- Related-post, alternate-template and advertisement saved structures remain editor-representable but have no frontend behavior or CSS. Static fixture tests preserve repeater row keys, subcontrol keys, representative source defaults and ordering.
+- All existing suites, the expanded Techgenyz fidelity assertions, whole-tree PHP lint and executable hygiene passed. Live Elementor, real `_elementor_data`, live edit/save round-trip and live CSS regeneration remain NOT RUN.
+- Versions remain 0.0.9, channel remains development, production ledger remains NONE, and 0.1.0 was not started.
