@@ -93,17 +93,23 @@ final class Schema {
 			) $c;",
 		);
 		foreach ( $sql as $statement ) { dbDelta( $statement ); }
+		if ( ! self::tables_ready() ) {
+			return false;
+		}
 		update_option( self::OPTION, self::VERSION, false );
 		return self::ready();
 	}
 
-	public static function ready(): bool {
+	public static function tables_ready(): bool {
 		global $wpdb; $t = Tables::names();
-		if ( self::VERSION !== (string) get_option( self::OPTION, '' ) ) { return false; }
 		foreach ( $t as $table ) {
 			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table ) ) );
 			if ( $found !== $table ) { return false; }
 		}
 		return true;
+	}
+
+	public static function ready(): bool {
+		return self::VERSION === (string) get_option( self::OPTION, '' ) && self::tables_ready();
 	}
 }

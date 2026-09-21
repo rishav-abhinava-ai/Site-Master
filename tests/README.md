@@ -55,3 +55,5 @@ Do not treat the absence of the future test suite in Development 0.0.1 as permis
 
 Run Development 0.0.7 media/static performance coverage with `php tests/media-cwv-smoke.php`. This suite uses controlled WordPress stubs and DOM assertions; it does not measure browser CWV or prove live WordPress output.
 `content-analytics-smoke.php` verifies Development 0.1.0 profile defaults, baseline key/normalization, daily hash rotation, privacy normalization, bot/device classification, trend/comparison helpers, append-only hygiene, browser-storage prohibition, bounded SQL, transactional cursor/lock behavior, legacy AJAX registration, and collector size/allowlist gates.
+
+`schema-recovery-smoke.php` verifies physical-table readiness independently from the schema-version option, healthy/stale/missing-table/failed-repair behavior, version persistence after successful verification only, and non-destructive repeated installation.

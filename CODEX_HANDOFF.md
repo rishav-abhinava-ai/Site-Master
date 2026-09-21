@@ -1361,3 +1361,9 @@ Post-completion Blocker 2 correction (2026-09-17 — daily reader boundary):
 - Event timestamps and hourly aggregation buckets remain UTC. Past-day finalization continues using `COUNT(DISTINCT reader_hash)` constrained to the stored `report_day`.
 - The 60-second beacon/legacy dedupe derivation remains byte-compatible with 0.1.0: its UTC daily key, epoch bucket, profile, post ID and transient identity inputs are unchanged. Legacy AJAX continues through Collector with no separate hashing path.
 - No schema change, stored-row rewrite or data migration was required. Development/plugin versions remain 0.1.0 and Development 0.1.1 was not started.
+
+Post-completion schema recovery hardening (2026-09-17):
+- Analytics schema version remains `1`. Installation now verifies all seven physical tables before persisting the current schema-version option, and full readiness still requires both the matching option and all tables.
+- A matching schema version with any missing table now causes the existing admin upgrade path to rerun non-destructive `dbDelta()` definitions; a healthy schema avoids repeat installation.
+- Repeated installation remains idempotent and preserves existing events, aggregates, cumulative totals, baselines, state and cursors. A failed physical repair returns false and leaves `Schema::ready()` false.
+- No table definition, schema migration, analytics-row rewrite or frontend repair path was introduced. Development/plugin versions remain 0.1.0 and Development 0.1.1 was not started.
